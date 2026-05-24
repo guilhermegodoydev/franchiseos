@@ -1,0 +1,20 @@
+# Pastas de compilação do .NET
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+bld/
+[Bb]in/
+[Oo]bj/
+
+# Arquivos do VS Code e ferramentas
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Arquivos do Sistema Operacional
+.DS_Store
+Thumbs.db
