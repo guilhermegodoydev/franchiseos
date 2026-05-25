@@ -19,6 +19,6 @@ public class Unit {
             }
 
             _royaltiesPercentage = value;
-        }; 
-    };
+        }
+    }
 }

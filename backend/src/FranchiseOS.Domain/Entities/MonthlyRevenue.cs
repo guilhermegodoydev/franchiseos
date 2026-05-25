@@ -21,12 +21,12 @@ public class MonthlyRevenue {
 
     private decimal _revenue;
     public decimal Revenue { 
-        get { return _revenue; }; 
+        get { return _revenue; }
         set {
             if (value < 0) {
                 throw new ArgumentException("Revenue cannot be negative.");
             }
             _revenue = value;
-        }; 
+        } 
     } 
 }

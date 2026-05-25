@@ -11,23 +11,23 @@ public class RoyaltyBilling {
 
     private decimal _calculatedAmount;
     public decimal CalculatedAmount { 
-        get { return _calculatedAmount; }; 
+        get { return _calculatedAmount; } 
         set {
             if (value < 0) {
                 throw new ArgumentException("CalculatedAmount cannot be negative.");
             }
             _calculatedAmount = value;
-        }; 
+        } 
     }
 
     private decimal _royaltiesPercentage;
     public decimal RoyaltiesPercentage {
-        get { return _royaltiesPercentage; }; 
+        get { return _royaltiesPercentage; } 
         set {
             if (value <= 0) {
                 throw new ArgumentException("RoyaltiesPercentage cannot be zero or negative.");
             }
             _royaltiesPercentage = value;
-        };
+        }
     }
 }
