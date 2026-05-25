@@ -1,5 +1,18 @@
-var builder = WebApplication.CreateBuilder(args);
+using FranchiseOS.Application.Services;
+using FranchiseOS.Domain.Interfaces;
+using FranchiseOS.Infrastructure;
+using FranchiseOS.Infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
 
+var builder = WebApplication.CreateBuilder(args);
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+builder.Services.AddDbContext<ApplicationDbContext>(options => 
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
+);
+
+builder.Services.AddScoped<IUnitRepository, UnitRepository>();
+builder.Services.AddScoped<UnitService>();
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
@@ -12,7 +25,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 var summaries = new[]
 {
