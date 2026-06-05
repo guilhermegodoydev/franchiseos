@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/FranchiseOS.API/FranchiseOS.API.csproj" />
+    <Project Path="src/FranchiseOS.Application/FranchiseOS.Application.csproj" />
+    <Project Path="src/FranchiseOS.Domain/FranchiseOS.Domain.csproj" />
+    <Project Path="src/FranchiseOS.Infrastructure/FranchiseOS.Infrastructure.csproj" />
+  </Folder>
+</Solution>
