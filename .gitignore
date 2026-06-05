@@ -1,4 +1,6 @@
-# Pastas de compilação do .NET
+# ==========================================
+# .NET BACKEND CONFIGURATIONS
+# ==========================================
 [Dd]ebug/
 [Rr]elease/
 x64/
@@ -7,7 +9,7 @@ bld/
 [Bb]in/
 [Oo]bj/
 
-# Arquivos do VS Code e ferramentas
+# Arquivos do VS Code e ferramentas .NET
 .vscode/
 .idea/
 *.suo
@@ -15,6 +17,47 @@ bld/
 *.userosscache
 *.sln.docstates
 
-# Arquivos do Sistema Operacional
+# ==========================================
+# NEXT.JS FRONTEND CONFIGURATIONS
+# ==========================================
+# Dependencies
+frontend/node_modules/
+frontend/.pnp
+frontend/.pnp.*
+frontend/.yarn/*
+!frontend/.yarn/patches
+!frontend/.yarn/plugins
+!frontend/.yarn/releases
+!frontend/.yarn/versions
+
+# Testing
+frontend/coverage/
+
+# Next.js build and static output
+frontend/.next/
+frontend/out/
+
+# Production output
+frontend/build/
+
+# Debug logs
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/.pnpm-debug.log*
+
+# Environment local secrets
+frontend/.env*
+
+# Vercel deployment cache
+frontend/.vercel/
+
+# TypeScript cache
+frontend/*.tsbuildinfo
+
+# ==========================================
+# GLOBAL OPERATIONAL SYSTEM FILES
+# ==========================================
 .DS_Store
 Thumbs.db
+*.pem
