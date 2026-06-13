@@ -27,7 +27,7 @@ export function MainSideBar() {
                             </SidebarMenuButton>
                             
                             <SidebarMenuButton asChild>
-                                <Link href="/">
+                                <Link href="/units">
                                     <Building2/>
                                     <p>Unidades</p>
                                 </Link>

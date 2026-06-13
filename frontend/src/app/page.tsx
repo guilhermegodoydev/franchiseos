@@ -48,7 +48,7 @@ export default function HomePage() {
   return (
     <>
       <Header pageTitle="Painel Financeiro" subtext="Visualize gráficos de desempenho e royalties">
-        <Link href="/" className="text-accent bg-accent-foreground rounded-md p-1.5 hover:bg-accent-foreground/80">Gerenciar Inadimplências</Link>
+        <Link href="/units" className="text-accent bg-accent-foreground rounded-md p-1.5 hover:bg-accent-foreground/80">Gerenciar Inadimplências</Link>
       </Header>
 
       <section>

@@ -47,8 +47,13 @@
     --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-@theme {
-  --color-success: rgba(35, 255, 35, 0.589);
+@theme base {
+  --color-success-bg: #36df554b;
+  --color-success-fg: #018719;
+
+  --color-empty-bg: #cccccc59;
+  --color-empty-fg: #646468;
+
   --color-primary: #3dff84;
   --color-hover: #3dff845b;
 }
