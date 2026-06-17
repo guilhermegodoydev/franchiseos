@@ -40,7 +40,6 @@ export default function UnitsPage() {
 
                 <div className="flex justify-between my-3">
                     <div className="flex gap-3">
-                        <Filter placeholder="Filtrar por tipo" items={["Unidade", "Franquia"]}/>
                         <Filter placeholder="Filtrar por Status" items={["Ativa", "Suspensa"]}/>
                         <Filter placeholder="Filtrar por Tamanho" items={["Pequena", "Média", "Grande"]}/>
                     </div>
