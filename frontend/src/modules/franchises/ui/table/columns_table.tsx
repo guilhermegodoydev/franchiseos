@@ -64,16 +64,6 @@ export const columns: ColumnDef<franchiseTable>[] = [
         },
     },
     {
-        accessorKey: "cost",
-        header: ({ column }) => (
-            <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-                Custo
-                <ArrowUpDown className="ml-2 h-4 w-4"/>
-            </Button>
-        ),
-        cell: ({ row }) => toCurrency(row.original.cost),
-    },
-    {
         accessorKey: "royaltiesPercentage",
         header: ({ column }) => (
             <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
