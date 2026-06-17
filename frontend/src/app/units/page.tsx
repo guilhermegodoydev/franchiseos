@@ -26,7 +26,10 @@ export default function UnitsPage() {
     return (
         <>
             <Header pageTitle="Unidades" subtext="Gerencie suas unidades">
-                <Button className="bg-black/90">Baixar Relatório de Desempenho</Button>
+                <div className="flex gap-3">
+                    <Button className="bg-black/90">Baixar Relatório de Desempenho</Button>
+                    <Button className="bg-black/90">Nova Unidade</Button>
+                </div>
             </Header>
 
             <section className="flex gap-5">
@@ -46,7 +49,6 @@ export default function UnitsPage() {
 
                     <div className="flex gap-3">
                         <Button variant="secondary"><Download/></Button>
-                        <Button className="bg-black/90"><Plus/></Button>
                     </div>
                 </div>
 
