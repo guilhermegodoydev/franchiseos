@@ -2,7 +2,7 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton } from "@/components/ui/sidebar";
-import { Building2, Handshake, LayoutDashboard, LogOut, Settings } from "lucide-react";
+import { Building2, Handshake, LayoutDashboard, LogOut, ReceiptText, Settings } from "lucide-react";
 import Link from "next/link";
 
 export function MainSideBar() {
@@ -37,6 +37,13 @@ export function MainSideBar() {
                                 <Link href="/franchises">
                                     <Handshake/>
                                     <p>Franqueados</p>
+                                </Link>
+                            </SidebarMenuButton>
+
+                            <SidebarMenuButton asChild>
+                                <Link href="/royalties">
+                                    <ReceiptText/>
+                                    <p>Royalties</p>
                                 </Link>
                             </SidebarMenuButton>
                         </SidebarMenu>
