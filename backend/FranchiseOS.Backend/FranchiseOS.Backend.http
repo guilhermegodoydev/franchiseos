@@ -1,6 +1,0 @@
-@FranchiseOS.Backend_HostAddress = http://localhost:5095
-
-GET {{FranchiseOS.Backend_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
