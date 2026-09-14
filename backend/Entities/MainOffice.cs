@@ -7,6 +7,15 @@ public class MainOffice {
     public bool IsDeleted { get; private set; } = false;
 
     public ICollection<Unit> Units { get; private set; } = new List<Unit>();
+    
+    public MainOffice() { }
+
+    public MainOffice(Guid id, string cnpj, string name, bool isDeleted) {
+        this.Id = id;
+        this.Cnpj = cnpj;
+        this.Name = name;
+        this.IsDeleted = isDeleted;
+    }
 
     public void Delete() {
         this.IsDeleted = true;
