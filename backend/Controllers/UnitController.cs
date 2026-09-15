@@ -29,4 +29,18 @@ public class UnitController : ControllerBase {
         var result = await _service.GetUnitsOfficeAsync(mainofficeId, currentPage, itemsPerPage, status, size, state, city, searchName);
         return Ok(result);
     }
+
+    [HttpGet("states/{mainofficeId:guid}")]
+    public async Task<ActionResult<List<string>>> GetStates([FromRoute] Guid mainofficeId) {
+        var result = await _service.GetStatesAsync(mainofficeId);
+        return result;
+    }
+
+    [HttpGet("cities/{mainofficeId:guid}")]
+    public async Task<ActionResult<List<string>>> GetCities([FromRoute] Guid mainofficeId, [FromQuery] string state) {
+        var result = await _service.GetCitiesInStateAsync(mainofficeId, state);
+        return result;
+    }
+
+    //Fazer endpoint de metricas de units para alimentar os cards
 }

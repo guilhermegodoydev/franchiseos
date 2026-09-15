@@ -15,16 +15,27 @@ public class UnitService {
         this._mainOfficeService = mfService;
     }
 
-    public async Task<PagedResultUnitsDto?> GetUnitsOfficeAsync(
-        Guid mainofficeId, 
-        int currentPage,
-        int itemsPerPage,
-        StatusEnum? status, 
-        SizeEnum? size, 
-        string? state, 
-        string? city,
-        string? searchName
-    ) {
+    public async Task<List<string>> GetStatesAsync(Guid mainofficeId) {
+        var officeExists = await _mainOfficeService.ExistsAsync(mainofficeId);
+
+        if (!officeExists) throw new MainOfficeNotFoundExcepetion(mainofficeId);
+
+        var states = await _context.Units.Where(u => u.MainOfficeId == mainofficeId).Select(u => u.State).Distinct().ToListAsync();
+
+        return states;
+    }
+
+    public async Task<List<string>> GetCitiesInStateAsync(Guid mainofficeId, string state) {
+        var officeExists = await _mainOfficeService.ExistsAsync(mainofficeId);
+
+        if (!officeExists) throw new MainOfficeNotFoundExcepetion(mainofficeId);
+
+        var cities = await _context.Units.Where(u => u.MainOfficeId == mainofficeId && EF.Functions.ILike(u.State, $"%{state}%")).Select(u => u.City).Distinct().ToListAsync();
+
+        return cities;
+    }
+
+    public async Task<PagedResultUnitsDto?> GetUnitsOfficeAsync(Guid mainofficeId, int currentPage, int itemsPerPage, StatusEnum? status, SizeEnum? size, string? state, string? city, string? searchName) {
         var officeExists = await _mainOfficeService.ExistsAsync(mainofficeId);
 
         if (!officeExists) throw new MainOfficeNotFoundExcepetion(mainofficeId);
