@@ -20,25 +20,26 @@ public class UnitController : ControllerBase {
         [FromRoute] Guid mainofficeId, 
         [FromQuery] StatusEnum? status, 
         [FromQuery] SizeEnum? size, 
+        [FromQuery] TypeEnum? type,
         [FromQuery] string? state, 
         [FromQuery] string? city,
         [FromQuery] string? searchName,
         [FromQuery] int currentPage = 1,
         [FromQuery] int itemsPerPage = 20
     ) {
-        var result = await _service.GetUnitsOfficeAsync(mainofficeId, currentPage, itemsPerPage, status, size, state, city, searchName);
+        var result = await _service.GetUnitsOfficeAsync(mainofficeId, type, currentPage, itemsPerPage, status, size, state, city, searchName);
         return Ok(result);
     }
 
     [HttpGet("states/{mainofficeId:guid}")]
-    public async Task<ActionResult<List<string>>> GetStates([FromRoute] Guid mainofficeId) {
-        var result = await _service.GetStatesAsync(mainofficeId);
+    public async Task<ActionResult<List<string>>> GetStates([FromRoute] Guid mainofficeId, [FromQuery] TypeEnum? type) {
+        var result = await _service.GetStatesAsync(mainofficeId, type);
         return result;
     }
 
     [HttpGet("cities/{mainofficeId:guid}")]
-    public async Task<ActionResult<List<string>>> GetCities([FromRoute] Guid mainofficeId, [FromQuery] string state) {
-        var result = await _service.GetCitiesInStateAsync(mainofficeId, state);
+    public async Task<ActionResult<List<string>>> GetCities([FromRoute] Guid mainofficeId, [FromQuery] string state, [FromQuery] TypeEnum? type) {
+        var result = await _service.GetCitiesInStateAsync(mainofficeId, state, type);
         return result;
     }
 

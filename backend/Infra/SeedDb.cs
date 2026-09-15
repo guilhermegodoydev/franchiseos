@@ -27,6 +27,7 @@ public static class SeedDb {
                 name: f.Company.CompanyName(),
                 status: f.PickRandom<StatusEnum>(),
                 size: f.PickRandom<SizeEnum>(),
+                type: f.PickRandom<TypeEnum>(),
                 cep: f.Address.ZipCode("#####-###"), 
                 street: f.Address.StreetName(),
                 number: f.Address.BuildingNumber(),

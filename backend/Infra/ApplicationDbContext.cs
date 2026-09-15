@@ -28,6 +28,7 @@ public class ApplicationDbContext: DbContext {
             entity.Property(u => u.Name).IsRequired().HasMaxLength(150);
             entity.Property(u => u.Status).IsRequired().HasConversion<string>().HasMaxLength(20);
             entity.Property(u => u.Size).IsRequired().HasConversion<string>().HasMaxLength(20);
+            entity.Property(u => u.Type).IsRequired().HasConversion<string>().HasMaxLength(20);
             entity.Property(u => u.Cep).IsRequired().HasMaxLength(9);
             entity.Property(u => u.Street).IsRequired().HasMaxLength(200);
             entity.Property(u => u.Number).IsRequired().HasMaxLength(20);

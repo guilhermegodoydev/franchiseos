@@ -1,12 +1,18 @@
 namespace backend.Entities;
 
 public enum StatusEnum {
-    ATIVA = 1,
-    SUSPENSA = 2,
+    Active = 1,
+    Inactive = 2,
 }
 
 public enum SizeEnum {
-    PEQUENA = 1,
-    MEDIA = 2,
-    GRANDE = 3
+    Kiosk = 1,
+    StandardStore = 2,
+    StreetStore = 3,
+    Flagship = 4,
+}
+
+public enum TypeEnum {
+    Own = 1,
+    Franchise = 2
 }
