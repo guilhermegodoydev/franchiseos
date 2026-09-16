@@ -10,6 +10,7 @@ public class ApplicationDbContext: DbContext {
 
     public DbSet<MainOffice> MainOffices { get; set; }
     public DbSet<Unit> Units { get; set; }
+    public DbSet<MonthlyRevenue> MonthlyRevenues { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -37,6 +38,17 @@ public class ApplicationDbContext: DbContext {
             entity.Property(u => u.State).IsRequired().HasMaxLength(2);
 
             entity.HasOne(u => u.MainOffice).WithMany(m => m.Units).HasForeignKey(u => u.MainOfficeId).OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<MonthlyRevenue>(m => {
+            m.HasKey(m => m.Id);
+
+            m.Property(u => u.Revenue).IsRequired();
+            m.Property(u => u.Month).IsRequired();
+            m.Property(u => u.Year).IsRequired();
+            m.Property(u => u.CreatedAt).IsRequired();
+
+            m.HasOne(u => u.Unit).WithMany(m => m.MonthlyRevenues).HasForeignKey(u => u.UnitId).OnDelete(DeleteBehavior.Restrict);
         });
     }
 }

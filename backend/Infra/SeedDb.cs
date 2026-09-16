@@ -35,11 +35,27 @@ public static class SeedDb {
                 city: f.Address.City(),
                 state: f.Address.StateAbbr(),
                 mainOfficeId: mainOfficeId
-            ))
-            .RuleFor(u => u.Revenue, f => Math.Round(f.Random.Double(10000, 500000), 2));
-
+            ));
 
         List<Unit> fakeUnits = unitFaker.Generate(50);
+        
+        var faker = new Faker("pt_BR");
+
+        foreach (Unit u in fakeUnits) {
+            int quantidadeMeses = faker.Random.Int(0, 12); 
+
+            for (int mes = 1; mes <= quantidadeMeses; mes++) {
+                
+                var mr = new MonthlyRevenue(
+                    unitId: u.Id,
+                    revenue: faker.Finance.Amount(1000m, 50000m),
+                    month: mes,
+                    year: 2026
+                );
+
+                u.MonthlyRevenues.Add(mr);
+            }
+        }
 
         context.MainOffices.Add(mainOffice);
         context.Units.AddRange(fakeUnits);

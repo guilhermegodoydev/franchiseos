@@ -43,10 +43,11 @@ public class UnitService {
         return cities;
     }
 
-    public async Task<PagedResultUnitsDto?> GetUnitsOfficeAsync(Guid mainofficeId, TypeEnum? type, int currentPage, int itemsPerPage, StatusEnum? status, SizeEnum? size, string? state, string? city, string? searchName) {
+    public async Task<PagedResultUnitsDto?> GetUnitsOfficeAsync(Guid mainofficeId, TypeEnum? type, int currentPage, int itemsPerPage, StatusEnum? status, SizeEnum? size, string? state, string? city, string? searchName, int currentMonth, int currentYear) {
         var officeExists = await _mainOfficeService.ExistsAsync(mainofficeId);
 
         if (!officeExists) throw new MainOfficeNotFoundExcepetion(mainofficeId);
+        if (currentMonth < 1 || currentMonth > 12) throw new ArgumentOutOfRangeException(nameof(currentMonth), "O mes deve ser entre 1 e 12");
 
         var query = _context.Units.AsNoTracking().Where(u => u.MainOfficeId == mainofficeId);
 
@@ -69,7 +70,10 @@ public class UnitService {
                 u.Size,
                 u.City,
                 u.State,
-                u.Revenue
+                u.MonthlyRevenues
+                    .Where(mm => mm.Month == currentMonth && mm.Year == currentYear)
+                    .Select(mm => mm.Revenue)
+                    .FirstOrDefault()
             ))
             .ToListAsync();
 

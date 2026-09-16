@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using backend.Entities;
 using backend.Services;
@@ -24,10 +25,12 @@ public class UnitController : ControllerBase {
         [FromQuery] string? state, 
         [FromQuery] string? city,
         [FromQuery] string? searchName,
-        [FromQuery] int currentPage = 1,
+        [FromQuery, Required] int? month,
+        [FromQuery, Required] int? year,
+        [FromQuery] int page = 1,
         [FromQuery] int itemsPerPage = 20
     ) {
-        var result = await _service.GetUnitsOfficeAsync(mainofficeId, type, currentPage, itemsPerPage, status, size, state, city, searchName);
+        var result = await _service.GetUnitsOfficeAsync(mainofficeId, type, page, itemsPerPage, status, size, state, city, searchName, month.Value, year.Value);
         return Ok(result);
     }
 

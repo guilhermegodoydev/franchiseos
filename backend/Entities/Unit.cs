@@ -14,11 +14,10 @@ public class Unit {
     public string City { get; private set; } = string.Empty;
     public string State { get; private set; } = string.Empty;
 
-    //ATRIBUTO TEMPORARIO PARA MVP
-    public double Revenue { get; private set; } = 0.00;
-
     public Guid MainOfficeId { get; private set; }
     public MainOffice MainOffice { get; private set; } = null!;
+
+    public ICollection<MonthlyRevenue> MonthlyRevenues { get; private set; } = new List<MonthlyRevenue>();
 
     private Unit() { }
 

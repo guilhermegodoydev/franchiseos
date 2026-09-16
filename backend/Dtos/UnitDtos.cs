@@ -9,7 +9,7 @@ public record UnitForListDto (
     SizeEnum Size,
     string City,
     string State,
-    double Revenue
+    decimal Revenue
 );
 
 public record PagedResultUnitsDto (
