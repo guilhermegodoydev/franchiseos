@@ -1,13 +1,13 @@
 import { Header } from "@/shared/ui/Header";
 import { Metadata } from "next";
-import { MetricCard } from "./ui/MetricCard";
+import { MetricCard } from "@/modules/units/ui/MetricCard";
 import { Download, HouseHeart, Medal, TrendingDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Filter } from "@/shared/ui/Filter";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/shared/ui/table/DataTable";
-import { columns } from "./ui/table/columns-table";
-import { tableUnit } from "./ui/table/schema";
+import { columns } from "@/modules/units/ui/columns-table";
+import { tableUnit } from "@/modules/units/schema";
 
 export const metadata: Metadata = {
     title: "FranchiseOS | Unidades",

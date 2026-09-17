@@ -14,3 +14,20 @@ export const unitSchema = z.object({
 });
 
 export type Unit = z.infer<typeof unitSchema>;
+
+//===========================================
+//                  UI
+//===========================================
+
+export const tableUnitSchema = unitSchema.pick({
+    id: true,
+    name: true,
+    status: true,
+    size: true,
+    city: true,
+    state: true,
+}).extend({
+    revenue: z.number().nonnegative(),
+});
+
+export type tableUnit = z.output<typeof tableUnitSchema>;
