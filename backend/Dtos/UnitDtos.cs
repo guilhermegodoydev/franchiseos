@@ -16,3 +16,14 @@ public record PagedResultUnitsDto (
     IEnumerable<UnitForListDto> Items,
     int TotalItems
 );
+
+public record MostRevenueInMonth (
+    string Name,
+    decimal Revenue
+);
+
+public record MetricsUnitsDto (
+    MostRevenueInMonth MostRevenue,
+    decimal Decrease,
+    string Health
+);
