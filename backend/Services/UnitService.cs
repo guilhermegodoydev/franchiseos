@@ -24,7 +24,7 @@ public class UnitService {
 
         if (type.HasValue) queryBase = queryBase.Where(u => u.Type == type);
 
-        var states = await queryBase.Select(u => u.State).Distinct().ToListAsync();
+        var states = await queryBase.Select(u => u.State).Distinct().OrderBy(c => c).ToListAsync();
 
         return states;
     }
@@ -38,7 +38,7 @@ public class UnitService {
 
         if (type.HasValue) queryBase = queryBase.Where(u => u.Type == type);
 
-        var cities = await queryBase.Select(u => u.City).Distinct().ToListAsync();
+        var cities = await queryBase.Select(u => u.City).Distinct().OrderBy(c => c).ToListAsync();
 
         return cities;
     }
