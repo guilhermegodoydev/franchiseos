@@ -14,7 +14,8 @@ public record UnitForListDto (
 
 public record PagedResultUnitsDto (
     IEnumerable<UnitForListDto> Items,
-    int TotalItems
+    int TotalItems,
+    int TotalPages
 );
 
 public record MostRevenueInMonth (
