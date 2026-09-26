@@ -2,7 +2,7 @@
 
 import { DataTableFeatures } from "@/shared/ui/table/Datatablefeatures";
 import { createColumnHelper } from "@tanstack/react-table";
-import { tableUnit } from "./schema";
+import { tableUnit, UNIT_SIZE_LABEL, UnitSize } from "../schema";
 import { formatCurrency } from "@/shared/utils";
 import { Button } from "@/components/ui/button";
 import { ArrowDownUp, ArrowUpDown } from "lucide-react";
@@ -49,8 +49,8 @@ export const columns = columnHelper.columns([
     columnHelper.accessor("size", {
         header: "Tamanho",
         cell: ({ row }) => {
-            const value = row.original.size;
-            const formatedValue = value === "MEDIA" ? "MÉDIA" : value;
+            const value = row.original.size as UnitSize;
+            const formatedValue = UNIT_SIZE_LABEL[value];
             const style = sizeStyles[value as keyof typeof sizeStyles];
 
             return (<span className={style}>{formatedValue}</span>);

@@ -1,134 +1,91 @@
 import { Header } from "@/shared/ui/Header";
 import { Metadata } from "next";
 import { MetricCard } from "@/modules/units/ui/MetricCard";
-import { Download, HouseHeart, Medal, TrendingDown } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Filter } from "@/shared/ui/Filter";
-import { Button } from "@/components/ui/button";
+import { HouseHeart, Medal, TrendingDown } from "lucide-react";
 import { DataTable } from "@/shared/ui/table/DataTable";
 import { columns } from "@/modules/units/ui/columns-table";
-import { tableUnit } from "@/modules/units/schema";
+import { formatCurrency } from "@/shared/utils";
+import { DataPagination } from "@/shared/ui/Pagination";
+import { redirect } from "next/navigation";
+import { ContainerFilters } from "@/modules/units/ui/ContainerFilters";
 
 export const metadata: Metadata = {
     title: "FranchiseOS | Unidades",
     description: "Gerenciamento de unidades da rede"
 };
 
-const data: tableUnit[] = [
-    {
-        id: "0198e5c1-7b2a-7c01-a001-000000000001",
-        name: "Unidade Gonzaga",
-        status: "ATIVA",
-        size: "GRANDE",
-        city: "Santos",
-        state: "SP",
-        revenue: 14000,
-    },
-    {
-        id: "0198e5c1-7b2a-7c01-a001-000000000002",
-        name: "Unidade Moema",
-        status: "ATIVA",
-        size: "MEDIA",
-        city: "São Paulo",
-        state: "SP",
-        revenue: 11850,
-    },
-    {
-        id: "0198e5c1-7b2a-7c01-a001-000000000003",
-        name: "Unidade Savassi",
-        status: "ATIVA",
-        size: "MEDIA",
-        city: "Belo Horizonte",
-        state: "MG",
-        revenue: 9750,
-    },
-    {
-        id: "0198e5c1-7b2a-7c01-a001-000000000004",
-        name: "Unidade Batel",
-        status: "SUSPENSA",
-        size: "PEQUENA",
-        city: "Curitiba",
-        state: "PR",
-        revenue: 4200,
-    },
-    {
-        id: "0198e5c1-7b2a-7c01-a001-000000000005",
-        name: "Unidade Boa Viagem",
-        status: "ATIVA",
-        size: "GRANDE",
-        city: "Recife",
-        state: "PE",
-        revenue: 13200,
-    },
-    {
-        id: "0198e5c1-7b2a-7c01-a001-000000000006",
-        name: "Unidade Asa Sul",
-        status: "SUSPENSA",
-        size: "MEDIA",
-        city: "Brasília",
-        state: "DF",
-        revenue: 6800,
-    },
-];
+interface UnitPageProps {
+    searchParams: Promise<{
+        type?: string;
+        status?: string;
+        size?: string;
+        state?: string;
+        city?: string;
+        month: string,
+        page: string,
+        year: string,
+    }>
+}
 
-const optStats = [
-    { label: "Ativa", value: "ativa" },
-    { label: "Suspensa", value: "suspensa"},
-]
+export default async function UnitsPage({ searchParams }: UnitPageProps) {
+    const filters = await searchParams;
+    const rawPage = Number(filters.page);
+    
+    if (filters.page !== undefined && (!Number.isFinite(rawPage) || rawPage < 1)) {
+        const params = new URLSearchParams(filters as Record<string, string>);
+        params.set("page", "1");
+        redirect(`/units?${params.toString()}`);
+    }
+    
+    const currentPage = rawPage || 1;
+    const params = new URLSearchParams(filters as Record<string, string>);
+    params.set("page", String(currentPage));
+    const queryString = params.toString();
 
-const optSize = [
-    { label: "Pequena", value: "pequena" },
-    { label: "Média", value: "media" },
-    { label: "Grande", value: "grande" },
-];
+    const [resUnits, resMetrics, resStates] = await Promise.all([
+        fetch(`http://localhost:5189/api/units/office/8c383fc5-32b5-4d69-9a29-92057b532163?${queryString}`, { next: { tags: ["units-office"] }}),
+        fetch("http://localhost:5189/api/units/metrics/8c383fc5-32b5-4d69-9a29-92057b532163", { next: { tags: ["units-metrics"] }}),
+        fetch("http://localhost:5189/api/units/states/8c383fc5-32b5-4d69-9a29-92057b532163", { next: { revalidate: 3600 }}),
+    ]);
 
-const optCities = [
-    { label: "Santos", value: "Santos" },
-    { label: "São Paulo", value: "São Paulo" },
-    { label: "Belo Horizonte", value: "Belo Horizonte" },
-    { label: "Curitiba", value: "Curitiba" },
-    { label: "Recife", value: "Recife" },
-    { label: "Brasília", value: "Brasília" },
-];
+    const [dataMetrics, dataStates, dataUnis] = await Promise.all([
+        resMetrics.json(),
+        resStates.json(),
+        resUnits.json(),
+    ]);
 
-const optStates = [
-    { label: "SP", value: "SP" },
-    { label: "MG", value: "MG" },
-    { label: "PR", value: "PR" },
-    { label: "PE", value: "PE" },
-    { label: "DF", value: "DF" },
-];
+    let dataCities: string[] = [];
 
-export default function UnitsPage() {
+    if (filters.state) {
+        const resCities = await fetch(`http://localhost:5189/api/units/cities/8c383fc5-32b5-4d69-9a29-92057b532163?state=${filters.state}`, { next: { revalidate: 3600 } });
+        dataCities = await resCities.json();
+    }
+
+    console.log(dataUnis);
+
+    const metrics = {
+        MostRevenueValue: dataMetrics?.mostRevenue?.revenue ? formatCurrency(dataMetrics?.mostRevenue?.revenue) : 0.00,
+        MostRevenueName: dataMetrics?.mostRevenue?.name ?? "---",
+        decrease: dataMetrics?.decrease ? (dataMetrics?.decrease + "%") :  "--",
+        health: dataMetrics.health ?? "--"
+    }
+
     return (
         <>
             <Header title="Unidades"></Header>
 
             <section className="flex gap-5">
-                <MetricCard title="Maior faturamento mensal" value="14 mil" description="Unidade Gonzaga" icon={Medal}></MetricCard>
-                <MetricCard title="Decrescimento" value="-4%" description="Lojas que tiveram quedas nas vendas" icon={TrendingDown}></MetricCard>
-                <MetricCard title="Saúde Geral" value="Estável" description="vendas se manteram na média no mês anterior" icon={HouseHeart}></MetricCard>
+                <MetricCard title="Maior faturamento mensal" value={metrics.MostRevenueValue.toString()} description={metrics.MostRevenueName} icon={Medal}></MetricCard>
+                <MetricCard title="Decrescimento" value={metrics.decrease} description="Lojas que tiveram quedas nas vendas" icon={TrendingDown}></MetricCard>
+                <MetricCard title="Saúde Geral" value={metrics.health} description="vendas se manteram na média no mês anterior" icon={HouseHeart}></MetricCard>
             </section>
 
             <section className="mt-10">
-                <Input placeholder="Buscar por nome"/>
-
-                <div className="flex justify-between my-3">
-                    <div className="flex gap-3">
-                        <Filter placeholder="Filtrar por Status" items={optStats}/>
-                        <Filter placeholder="Filtrar por Tamanho" items={optSize}/>
-                        <Filter placeholder="Filtrar por Estado" items={optStates}/>
-                        <Filter placeholder="Filtrar por Cidade" items={optCities}/>
-                    </div>
-
-                    <div className="flex gap-3">
-                        <Button variant="secondary">
-                            <Download/>
-                        </Button>
-                    </div>
-                </div>
+                <ContainerFilters states={dataStates} cities={dataCities}/>
                 
-                <DataTable columns={columns} data={data}/>
+                <DataTable columns={columns} data={dataUnis?.items ?? []}/>
+
+                <DataPagination totalPages={dataUnis?.totalPages ?? 1} currentPage={currentPage} />
             </section>
         </>
     );

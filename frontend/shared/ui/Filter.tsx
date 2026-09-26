@@ -1,27 +1,53 @@
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useMemo } from "react";
+  
 interface FilterProps {
-    items: { label: string, value: string }[],
-    placeholder: string,
+    name: string;
+    items: { label: string; value: string }[] | string[] | Record<string, string>;
+    placeholder: string;
+    value?: string;
+    onChange?: (name: string, value: string) => void;
+    className?: string;
 }
 
-export function Filter({ items, placeholder }: FilterProps) {
+interface FormatedItem {
+    label: string;
+    value: string;
+}
+
+export function Filter({ name, items, placeholder, value = "", onChange, className, ...rest }: FilterProps) {
+    const isArray = Array.isArray(items);
+    const isStringArray = isArray && items.length > 0 && typeof items[0] === "string";
+
+    const formatedItems: FormatedItem[] = useMemo(() => {
+        if (!isArray && typeof items === "object" && items !== null) {
+            return Object.entries(items).map(([key, val]) => ({ label: String(val), value: String(key) }));
+        }
+        if (isStringArray) return (items as string[]).map((item) => ({ label: item, value: item }));
+        
+        return items as FormatedItem[];
+    }, [items, isArray, isStringArray]);
+
+    const selectedLabel = useMemo(() => formatedItems.find((i) => i.value === value)?.label, [formatedItems, value]);
+
+    const handleValueChange = (newValue: string | null) => {
+        if (newValue !== null) onChange?.(name, newValue);
+    };
+
     return (
-        <Select>
-            <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder={placeholder} />
+        <Select value={value} onValueChange={handleValueChange} {...rest}>
+            <SelectTrigger className={className ?? "w-[180px]"}>
+                <SelectValue placeholder={placeholder}>
+                    {selectedLabel ?? placeholder}
+                </SelectValue>
             </SelectTrigger>
             <SelectContent>
                 <SelectGroup>
-                    {items.map(i => (
-                        <SelectItem key={i.value} value={i.label} data-value={i.value}>{i.label}</SelectItem>
+                <SelectItem value="">Todos</SelectItem>
+                    {formatedItems.map((i) => (
+                        <SelectItem key={i.value} value={i.value}>
+                        {i.label}
+                        </SelectItem>
                     ))}
                 </SelectGroup>
             </SelectContent>
