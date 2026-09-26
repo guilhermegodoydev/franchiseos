@@ -74,7 +74,12 @@ export const columns = columnHelper.columns([
                 </Button>
             );
         },
-        cell: ({ row }) => (<span className="text-right">{formatCurrency(row.original.revenue)}</span>),
+        cell: ({ row }) => {
+            const value = row.original.revenue;
+            const label = value ? formatCurrency(row.original.revenue) : "--"; 
+            
+            return (<span className="text-right">{label}</span>);
+        },
     }),
 
     columnHelper.accessor("royaltiesPercentage", {

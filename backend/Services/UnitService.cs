@@ -74,7 +74,7 @@ public class UnitService {
                 u.RoyaltiesPercentage,
                 u.MonthlyRevenues
                     .Where(mm => mm.Month == currentMonth && mm.Year == currentYear)
-                    .Select(mm => mm.Revenue)
+                    .Select(mm => (decimal?)mm.Revenue)
                     .FirstOrDefault()
                 
             ))

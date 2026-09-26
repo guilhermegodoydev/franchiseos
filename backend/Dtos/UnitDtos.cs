@@ -11,7 +11,7 @@ public record UnitForListDto (
     string City,
     string State,
     decimal? RoyaltiesPercentage,
-    decimal Revenue
+    decimal? Revenue
 );
 
 public record PagedResultUnitsDto (
