@@ -67,4 +67,10 @@ public class UnitController : ControllerBase {
         
         return Ok(mockMetrics);
     }
+
+    [HttpPost("office/{mainofficeId:guid}")]
+    public async Task<IActionResult> CreateUnit([FromRoute] Guid mainofficeId, [FromBody] CreateUnitDto dto) {
+        var result = await _service.CreateUnitAsync(mainofficeId, dto);
+        return Ok(result);
+    }
 }

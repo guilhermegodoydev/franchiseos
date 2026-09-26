@@ -36,6 +36,7 @@ public class ApplicationDbContext: DbContext {
             entity.Property(u => u.Neighborhood).IsRequired().HasMaxLength(100);
             entity.Property(u => u.City).IsRequired().HasMaxLength(100);
             entity.Property(u => u.State).IsRequired().HasMaxLength(2);
+            entity.Property(u => u.RoyaltiesPercentage).HasColumnType("decimal(5,2)");
 
             entity.HasOne(u => u.MainOffice).WithMany(m => m.Units).HasForeignKey(u => u.MainOfficeId).OnDelete(DeleteBehavior.Restrict);
         });

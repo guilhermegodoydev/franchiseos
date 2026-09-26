@@ -6,6 +6,7 @@ public class Unit {
     public StatusEnum Status { get; private set; } = StatusEnum.Active;
     public SizeEnum Size { get; private set; }
     public TypeEnum Type { get; private set; }
+    public decimal? RoyaltiesPercentage { get; private set; }
 
     public string Cep { get; private set; } = string.Empty;
     public string Street { get; private set; } = string.Empty;
@@ -32,7 +33,8 @@ public class Unit {
         string neighborhood, 
         string city, 
         string state, 
-        Guid mainOfficeId
+        Guid mainOfficeId,
+        decimal? royaltiesPercentage = null
     )
     {
         if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("Erro: Nome é obrigatório.");
@@ -43,7 +45,7 @@ public class Unit {
         if (string.IsNullOrWhiteSpace(city)) throw new ArgumentException("Erro: Cidade é obrigatória.");
         if (string.IsNullOrWhiteSpace(state)) throw new ArgumentException("Erro: Estado é obrigatório.");
         if (mainOfficeId == Guid.Empty) throw new ArgumentException("Erro: É necessário vincular a uma Matriz válida.");
-
+        if (royaltiesPercentage.HasValue && (royaltiesPercentage < 1 || royaltiesPercentage > 100)) throw new ArgumentException("Erro: Royalties deve estar entre 1 e 100.");
         if (!Enum.IsDefined(status)) throw new ArgumentException("Erro: Status inválido.");
         if (!Enum.IsDefined(size)) throw new ArgumentException("Erro: Porte (Size) inválido.");
         if (!Enum.IsDefined(type)) throw new ArgumentException("Erro: Tipo inválido.");
@@ -60,5 +62,6 @@ public class Unit {
         City = city;
         State = state;
         MainOfficeId = mainOfficeId;
+        RoyaltiesPercentage = royaltiesPercentage;
 }
 }

@@ -34,7 +34,8 @@ public static class SeedDb {
                 neighborhood: f.PickRandom(neighbors),
                 city: f.Address.City(),
                 state: f.Address.StateAbbr(),
-                mainOfficeId: mainOfficeId
+                mainOfficeId: mainOfficeId,
+                royaltiesPercentage: f.Random.Number(1,100).OrNull(f, 0.2f)
             ));
 
         List<Unit> fakeUnits = unitFaker.Generate(50);

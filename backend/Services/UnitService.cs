@@ -80,4 +80,42 @@ public class UnitService {
 
         return new PagedResultUnitsDto(items, totalItems, totalPages);
     }
+
+    public async Task<UnitForListDto> CreateUnitAsync(Guid mainOfficeId, CreateUnitDto dto)
+    {
+        var officeExists = await _mainOfficeService.ExistsAsync(mainOfficeId);
+        if (!officeExists) throw new MainOfficeNotFoundExcepetion(mainOfficeId);
+
+        var nameAlreadyExists = await _context.Units.AnyAsync(u => u.MainOfficeId == mainOfficeId && u.Name == dto.Name);
+
+        if (nameAlreadyExists) throw new UnitNameAlreadyExistsException(dto.Name);
+
+        var unit = new Unit(
+            dto.Name,
+            dto.Status,
+            dto.Size,
+            dto.Type,
+            dto.Cep,
+            dto.Street,
+            dto.Number,
+            dto.Neighborhood,
+            dto.City,
+            dto.State,
+            mainOfficeId,
+            dto.RoyaltiesPercentage
+        );
+
+        _context.Units.Add(unit);
+        await _context.SaveChangesAsync();
+
+        return new UnitForListDto(
+            unit.Id,
+            unit.Name,
+            unit.Status,
+            unit.Size,
+            unit.City,
+            unit.State,
+            0
+        );
+    }
 }
