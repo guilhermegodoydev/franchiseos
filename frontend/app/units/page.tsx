@@ -43,9 +43,9 @@ export default async function UnitsPage({ searchParams }: UnitPageProps) {
     const queryString = params.toString();
 
     const [resUnits, resMetrics, resStates] = await Promise.all([
-        fetch(`http://localhost:5189/api/units/office/8c383fc5-32b5-4d69-9a29-92057b532163?${queryString}`, { next: { tags: ["units-office"] }}),
-        fetch("http://localhost:5189/api/units/metrics/8c383fc5-32b5-4d69-9a29-92057b532163", { next: { tags: ["units-metrics"] }}),
-        fetch("http://localhost:5189/api/units/states/8c383fc5-32b5-4d69-9a29-92057b532163", { next: { revalidate: 3600 }}),
+        fetch(`http://localhost:5189/api/units/office/01a0dea4-983d-7123-a123-123456789abc?${queryString}`, { next: { tags: ["units-office"] }}),
+        fetch("http://localhost:5189/api/units/metrics/01a0dea4-983d-7123-a123-123456789abc", { next: { tags: ["units-metrics"] }}),
+        fetch("http://localhost:5189/api/units/states/01a0dea4-983d-7123-a123-123456789abc", { next: { revalidate: 3600 }}),
     ]);
 
     const [dataMetrics, dataStates, dataUnis] = await Promise.all([
@@ -57,7 +57,7 @@ export default async function UnitsPage({ searchParams }: UnitPageProps) {
     let dataCities: string[] = [];
 
     if (filters.state) {
-        const resCities = await fetch(`http://localhost:5189/api/units/cities/8c383fc5-32b5-4d69-9a29-92057b532163?state=${filters.state}`, { next: { revalidate: 3600 } });
+        const resCities = await fetch(`http://localhost:5189/api/units/cities/01a0dea4-983d-7123-a123-123456789abc?state=${filters.state}`, { next: { revalidate: 3600 } });
         dataCities = await resCities.json();
     }
 

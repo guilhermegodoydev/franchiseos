@@ -43,7 +43,7 @@ namespace backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MainOffices");
+                    b.ToTable("MainOffices", (string)null);
                 });
 
             modelBuilder.Entity("backend.Entities.MonthlyRevenue", b =>
@@ -71,7 +71,7 @@ namespace backend.Migrations
 
                     b.HasIndex("UnitId");
 
-                    b.ToTable("MonthlyRevenues");
+                    b.ToTable("MonthlyRevenues", (string)null);
                 });
 
             modelBuilder.Entity("backend.Entities.Unit", b =>
@@ -137,7 +137,7 @@ namespace backend.Migrations
 
                     b.HasIndex("MainOfficeId");
 
-                    b.ToTable("Units");
+                    b.ToTable("Units", (string)null);
                 });
 
             modelBuilder.Entity("backend.Entities.MonthlyRevenue", b =>

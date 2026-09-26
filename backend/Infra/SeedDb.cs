@@ -14,7 +14,7 @@ public static class SeedDb {
 
         string[] neighbors = ["Centro", "Jardins", "Vila Mariana", "Botafogo", "Copacabana", "Boa Viagem", "Meireles", "Savassi"]; 
 
-        Guid mainOfficeId = Guid.Parse("8c383fc5-32b5-4d69-9a29-92057b532163");
+        Guid mainOfficeId = Guid.Parse("01a0dea4-983d-7123-a123-123456789abc");
         var mainOffice = new MainOffice(
             mainOfficeId,
             "77143715000128",
