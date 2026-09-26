@@ -8,6 +8,8 @@ interface FilterProps {
     value?: string;
     onChange?: (name: string, value: string) => void;
     className?: string;
+    allowClear?: boolean;
+    clearLabel?: string;
 }
 
 interface FormatedItem {
@@ -15,7 +17,7 @@ interface FormatedItem {
     value: string;
 }
 
-export function Filter({ name, items, placeholder, value = "", onChange, className, ...rest }: FilterProps) {
+export function Filter({ name, items, placeholder, value = "", allowClear = true, clearLabel, onChange, className, ...rest }: FilterProps) {
     const isArray = Array.isArray(items);
     const isStringArray = isArray && items.length > 0 && typeof items[0] === "string";
 
@@ -43,11 +45,9 @@ export function Filter({ name, items, placeholder, value = "", onChange, classNa
             </SelectTrigger>
             <SelectContent>
                 <SelectGroup>
-                <SelectItem value="">Todos</SelectItem>
+                    {allowClear && <SelectItem value="">{clearLabel ?? "Todos"}</SelectItem>}
                     {formatedItems.map((i) => (
-                        <SelectItem key={i.value} value={i.value}>
-                        {i.label}
-                        </SelectItem>
+                        <SelectItem key={i.value} value={i.value}>{i.label}</SelectItem>
                     ))}
                 </SelectGroup>
             </SelectContent>

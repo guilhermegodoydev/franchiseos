@@ -1,13 +1,14 @@
 import { Header } from "@/shared/ui/Header";
 import { Metadata } from "next";
-import { MetricCard } from "@/modules/units/ui/MetricCard";
+import { MetricCard } from "@/shared/ui/MetricCard";
 import { HouseHeart, Medal, TrendingDown } from "lucide-react";
 import { DataTable } from "@/shared/ui/table/DataTable";
 import { columns } from "@/modules/units/ui/columns-table";
 import { formatCurrency } from "@/shared/utils";
 import { DataPagination } from "@/shared/ui/Pagination";
 import { redirect } from "next/navigation";
-import { ContainerFilters } from "@/modules/units/ui/ContainerFilters";
+import { ContainerFilters } from "@/modules/units/features/ContainerFilters";
+import { ButtonRegisterUnit } from "@/modules/units/features/create-unit/ButtonRegisterUnit";
 
 export const metadata: Metadata = {
     title: "FranchiseOS | Unidades",
@@ -61,8 +62,6 @@ export default async function UnitsPage({ searchParams }: UnitPageProps) {
         dataCities = await resCities.json();
     }
 
-    console.log(dataUnis);
-
     const metrics = {
         MostRevenueValue: dataMetrics?.mostRevenue?.revenue ? formatCurrency(dataMetrics?.mostRevenue?.revenue) : 0.00,
         MostRevenueName: dataMetrics?.mostRevenue?.name ?? "---",
@@ -72,7 +71,9 @@ export default async function UnitsPage({ searchParams }: UnitPageProps) {
 
     return (
         <>
-            <Header title="Unidades"></Header>
+            <Header title="Unidades">
+                <ButtonRegisterUnit/>
+            </Header>
 
             <section className="flex gap-5">
                 <MetricCard title="Maior faturamento mensal" value={metrics.MostRevenueValue.toString()} description={metrics.MostRevenueName} icon={Medal}></MetricCard>
