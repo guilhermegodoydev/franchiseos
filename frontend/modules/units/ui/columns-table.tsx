@@ -5,7 +5,7 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { tableUnit, UNIT_SIZE_LABEL, UnitSize } from "../schema";
 import { formatCurrency } from "@/shared/utils";
 import { Button } from "@/components/ui/button";
-import { ArrowDownUp, ArrowUpDown } from "lucide-react";
+import { ArrowUpDown } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 const columnHelper = createColumnHelper<DataTableFeatures, tableUnit>();
@@ -76,4 +76,23 @@ export const columns = columnHelper.columns([
         },
         cell: ({ row }) => (<span className="text-right">{formatCurrency(row.original.revenue)}</span>),
     }),
+
+    columnHelper.accessor("royaltiesPercentage", {
+        header: ({ column }) => {
+            return (
+                <div className="text-center">
+                    <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+                        Royaltie
+                        <ArrowUpDown className="ml-2 h-4 w-4"/>
+                    </Button>
+                </div>
+            );
+        },
+        cell: ({ row }) => {
+            const value = row.original.royaltiesPercentage
+            const label = value != null ? `${value}%` : "--";
+
+            return (<div className="text-center">{label}</div>);
+        }
+    })
 ]);

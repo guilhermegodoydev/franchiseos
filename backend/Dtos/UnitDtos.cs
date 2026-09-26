@@ -10,6 +10,7 @@ public record UnitForListDto (
     SizeEnum Size,
     string City,
     string State,
+    decimal? RoyaltiesPercentage,
     decimal Revenue
 );
 

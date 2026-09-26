@@ -71,10 +71,12 @@ public class UnitService {
                 u.Size,
                 u.City,
                 u.State,
+                u.RoyaltiesPercentage,
                 u.MonthlyRevenues
                     .Where(mm => mm.Month == currentMonth && mm.Year == currentYear)
                     .Select(mm => mm.Revenue)
                     .FirstOrDefault()
+                
             ))
             .ToListAsync();
 
@@ -115,6 +117,7 @@ public class UnitService {
             unit.Size,
             unit.City,
             unit.State,
+            unit.RoyaltiesPercentage,
             0
         );
     }

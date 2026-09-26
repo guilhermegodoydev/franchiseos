@@ -39,7 +39,7 @@ export const unitSchema = z.object({
     city: z.string().min(2, "O nome da cidade deve ter pelo menos 2 caracteres").max(100, "O nome da cidade é muito grande"),
     state: z.string().min(2, "A sigla deve ter 2 letras").max(2, "A sigla deve ter 2 letras"),
     main_office_id: z.uuidv7("ID da matriz inválido"),
-    royalties_percentage: z.number().min(1, "A taxa mínima é de 1%").max(100, "A taxa máxima é de 100%").nullable(),
+    royaltiesPercentage: z.number().min(1, "A taxa mínima é de 1%").max(100, "A taxa máxima é de 100%").nullable(),
 });
 
 export type Unit = z.infer<typeof unitSchema>;
@@ -55,6 +55,7 @@ export const tableUnitSchema = unitSchema.pick({
     size: true,
     city: true,
     state: true,
+    royaltiesPercentage: true,
 }).extend({
     revenue: z.number().nonnegative(),
 });
