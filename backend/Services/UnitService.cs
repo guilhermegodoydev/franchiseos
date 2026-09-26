@@ -59,7 +59,7 @@ public class UnitService {
         if (!string.IsNullOrWhiteSpace(searchName)) query = query.Where(u => EF.Functions.ILike(u.Name, $"%{searchName}%"));
 
         var totalItems = await query.CountAsync();
-        var totalPages = totalItems / itemsPerPage;
+        var totalPages = totalItems > 0 ? (int)Math.Ceiling(totalItems / (double)itemsPerPage) : 0;
 
         var items = await query
             .Skip((currentPage - 1) * itemsPerPage)
