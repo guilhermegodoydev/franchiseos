@@ -27,14 +27,14 @@ const defaultValues: CreateUnitFormData = {
   neighborhood: "",
   city: "",
   state: "",
-  royalties_percentage: null,
+  royaltiesPercentage: null,
 };
 
 const STEPS: { title: string; fields: (keyof CreateUnitFormData)[] }[] = [
   { title: "Identificação", fields: ["name"] },
   { title: "Classificação", fields: ["status", "type", "size"] },
   { title: "Endereço", fields: ["cep", "street", "number", "neighborhood", "city", "state"] },
-  { title: "Financeiro", fields: ["royalties_percentage"] },
+  { title: "Financeiro", fields: ["royaltiesPercentage"] },
 ];
 
 interface CreateUnitDialogProps {
@@ -224,13 +224,13 @@ export function CreateUnitDialog({ open, onOpenChange, mainOfficeId }: CreateUni
 
             {step === 3 && (
               <Field>
-                <FieldLabel htmlFor="royalties_percentage">Royalties (%) — opcional</FieldLabel>
+                <FieldLabel htmlFor="royaltiesPercentage">Royalties (%) — opcional</FieldLabel>
                 <Controller
                   control={control}
-                  name="royalties_percentage"
+                  name="royaltiesPercentage"
                   render={({ field }) => (
                     <Input
-                      id="royalties_percentage"
+                      id="royaltiesPercentage"
                       type="number"
                       step="0.01"
                       min={1}
@@ -243,8 +243,8 @@ export function CreateUnitDialog({ open, onOpenChange, mainOfficeId }: CreateUni
                     />
                   )}
                 />
-                {errors.royalties_percentage && (
-                  <FieldError>{errors.royalties_percentage.message}</FieldError>
+                {errors.royaltiesPercentage && (
+                  <FieldError>{errors.royaltiesPercentage.message}</FieldError>
                 )}
               </Field>
             )}
