@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { FocusEvent, useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -9,9 +9,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Field, FieldGroup, FieldError, FieldLabel } from "@/components/ui/field";
-import { Filter } from "@/shared/ui/Filter";
 import { unitSchema, UNIT_STATUS_LABEL, UNIT_TYPE_LABEL, UNIT_SIZE_LABEL } from "@/modules/units/schema";
 import { createUnit } from "@/modules/units/actions";
+import { getAddressByCep } from "@/shared/actions";
+import { FormTextField } from "@/shared/ui/form/FormTextField";
+import { FormFilterField } from "@/shared/ui/form/FormFilterField";
+import { IMaskInput } from 'react-imask';
+import { CONFIG_MASKS } from "@/shared/consts";
 
 const createUnitSchema = unitSchema.omit({ id: true, main_office_id: true });
 type CreateUnitFormData = z.infer<typeof createUnitSchema>;
@@ -47,15 +51,7 @@ export function CreateUnitDialog({ open, onOpenChange, mainOfficeId }: CreateUni
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [step, setStep] = useState(0);
 
-  const {
-    control,
-    register,
-    handleSubmit,
-    trigger,
-    clearErrors,
-    reset,
-    formState: { errors },
-  } = useForm<CreateUnitFormData>({
+  const { control, register, setValue, handleSubmit, trigger, clearErrors, reset, formState: { errors }, } = useForm<CreateUnitFormData>({
     resolver: zodResolver(createUnitSchema),
     defaultValues,
     mode: "onSubmit",
@@ -95,6 +91,21 @@ export function CreateUnitDialog({ open, onOpenChange, mainOfficeId }: CreateUni
     onOpenChange(false);
   };
 
+  const getAddress = async (e: FocusEvent<HTMLInputElement>) => {
+    const cep = e.target.value;
+
+    const res = await getAddressByCep(cep);
+
+    if (res?.error) return;
+
+    const data = res.data;
+
+    setValue("city", data?.city || "");
+    setValue("neighborhood", data?.neighborhood || "");
+    setValue("state", data?.state || "");
+    setValue("street", data?.street || "");
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
@@ -108,71 +119,37 @@ export function CreateUnitDialog({ open, onOpenChange, mainOfficeId }: CreateUni
         <form onSubmit={handleSubmit(onSubmit)}>
           <FieldGroup>
             {step === 0 && (
-              <Field>
-                <FieldLabel htmlFor="name">Nome</FieldLabel>
-                <Input id="name" {...register("name")} />
-                {errors.name && <FieldError>{errors.name.message}</FieldError>}
-              </Field>
+              <FormTextField id="name" label="Nome" register={register("name")} error={errors.name?.message}/>
             )}
 
             {step === 1 && (
               <>
-                <Field>
-                  <FieldLabel>Status</FieldLabel>
-                  <Controller
-                    control={control}
-                    name="status"
-                    render={({ field }) => (
-                      <Filter
-                        name="status"
-                        items={UNIT_STATUS_LABEL}
-                        placeholder="Selecione o status"
-                        value={field.value}
-                        allowClear={false}
-                        onChange={(_, value) => field.onChange(value)}
-                      />
-                    )}
-                  />
-                  {errors.status && <FieldError>{errors.status.message}</FieldError>}
-                </Field>
+                <FormFilterField 
+                  name="status" 
+                  control={control} 
+                  label="Status" 
+                  items={UNIT_STATUS_LABEL}
+                  placeholder="Selecione o status"
+                  error={errors.status?.message}
+                />
 
-                <Field>
-                  <FieldLabel>Tipo</FieldLabel>
-                  <Controller
-                    control={control}
-                    name="type"
-                    render={({ field }) => (
-                      <Filter
-                        name="type"
-                        items={UNIT_TYPE_LABEL}
-                        placeholder="Selecione o tipo"
-                        value={field.value}
-                        allowClear={false}
-                        onChange={(_, value) => field.onChange(value)}
-                      />
-                    )}
-                  />
-                  {errors.type && <FieldError>{errors.type.message}</FieldError>}
-                </Field>
+                <FormFilterField 
+                  name="type" 
+                  control={control} 
+                  label="Tipo" 
+                  items={UNIT_TYPE_LABEL}
+                  placeholder="Selecione o Tipo"
+                  error={errors.type?.message}
+                />
 
-                <Field>
-                  <FieldLabel>Tamanho</FieldLabel>
-                  <Controller
-                    control={control}
-                    name="size"
-                    render={({ field }) => (
-                      <Filter
-                        name="size"
-                        items={UNIT_SIZE_LABEL}
-                        placeholder="Selecione o tamanho"
-                        value={field.value}
-                        allowClear={false}
-                        onChange={(_, value) => field.onChange(value)}
-                      />
-                    )}
-                  />
-                  {errors.size && <FieldError>{errors.size.message}</FieldError>}
-                </Field>
+                <FormFilterField 
+                  name="size" 
+                  control={control} 
+                  label="Tamanho" 
+                  items={UNIT_SIZE_LABEL}
+                  placeholder="Selecione o tamanho"
+                  error={errors.size?.message}
+                />
               </>
             )}
 
@@ -181,43 +158,36 @@ export function CreateUnitDialog({ open, onOpenChange, mainOfficeId }: CreateUni
                 <div className="flex gap-3">
                   <Field className="w-32">
                     <FieldLabel htmlFor="cep">CEP</FieldLabel>
-                    <Input id="cep" {...register("cep")} />
+                    <Controller
+                      control={control}
+                      name="cep"
+                      render={({ field }) => (
+                        <IMaskInput
+                          mask={CONFIG_MASKS.cep}
+                          onAccept={(value, maskRef) => field.onChange(maskRef.unmaskedValue)}
+                          onBlur={(e) => {
+                            field.onBlur();
+                            getAddress(e as any);
+                          }}
+                          className="border bg-gray-100/80 p-2 rounded-full w-full"
+                          id="cep"
+                        />
+                      )}
+                    />
                     {errors.cep && <FieldError>{errors.cep.message}</FieldError>}
                   </Field>
 
-                  <Field className="flex-1">
-                    <FieldLabel htmlFor="street">Rua</FieldLabel>
-                    <Input id="street" {...register("street")} />
-                    {errors.street && <FieldError>{errors.street.message}</FieldError>}
-                  </Field>
+                  <FormTextField id="street" label="Rua" className="flex-1" register={register("street")} error={errors.street?.message} />
                 </div>
 
                 <div className="flex gap-3">
-                  <Field className="w-28">
-                    <FieldLabel htmlFor="number">Número</FieldLabel>
-                    <Input id="number" {...register("number")} />
-                    {errors.number && <FieldError>{errors.number.message}</FieldError>}
-                  </Field>
-
-                  <Field className="flex-1">
-                    <FieldLabel htmlFor="neighborhood">Bairro</FieldLabel>
-                    <Input id="neighborhood" {...register("neighborhood")} />
-                    {errors.neighborhood && <FieldError>{errors.neighborhood.message}</FieldError>}
-                  </Field>
+                  <FormTextField id="number" label="Número" className="w-28" register={register("number")} error={errors.number?.message} />
+                  <FormTextField id="neighborhood" label="Bairro" className="flex-1" register={register("neighborhood")} error={errors.neighborhood?.message}/>
                 </div>
 
                 <div className="flex gap-3">
-                  <Field className="flex-1">
-                    <FieldLabel htmlFor="city">Cidade</FieldLabel>
-                    <Input id="city" {...register("city")} />
-                    {errors.city && <FieldError>{errors.city.message}</FieldError>}
-                  </Field>
-
-                  <Field className="w-20">
-                    <FieldLabel htmlFor="state">UF</FieldLabel>
-                    <Input id="state" maxLength={2} {...register("state")} />
-                    {errors.state && <FieldError>{errors.state.message}</FieldError>}
-                  </Field>
+                  <FormTextField id="city" label="Cidade" className="flex-1" register={register("city")} error={errors.city?.message}/>                  
+                  <FormTextField id="state" label="Estado" className="w-20" register={register("state")} error={errors.state?.message}/>
                 </div>
               </>
             )}

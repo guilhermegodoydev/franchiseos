@@ -18,3 +18,10 @@ export const YEARS = Array.from({ length: 7 }, (_, i) => {
   const year = String(CURRENT_YEAR - 5 + i);
   return { label: year, value: year };
 }).reverse();
+
+export const CONFIG_MASKS = {
+  cpf: "000.000.000-00",
+  cnpj: "00.000.000/0000-00",
+  telefone: "(00) 00000-0000",
+  cep: "00000-000",
+} as const;
