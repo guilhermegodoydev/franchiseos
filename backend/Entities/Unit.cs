@@ -22,33 +22,10 @@ public class Unit {
 
     private Unit() { }
 
-    public Unit(
-        string name, 
-        StatusEnum status, 
-        SizeEnum size, 
-        TypeEnum type,
-        string cep, 
-        string street, 
-        string number, 
-        string neighborhood, 
-        string city, 
-        string state, 
-        Guid mainOfficeId,
-        decimal? royaltiesPercentage = null
-    )
-    {
-        if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("Erro: Nome é obrigatório.");
-        if (string.IsNullOrWhiteSpace(cep)) throw new ArgumentException("Erro: CEP é obrigatório.");
-        if (string.IsNullOrWhiteSpace(street)) throw new ArgumentException("Erro: Rua é obrigatória.");
-        if (string.IsNullOrWhiteSpace(number)) throw new ArgumentException("Erro: Número é obrigatório.");
-        if (string.IsNullOrWhiteSpace(neighborhood)) throw new ArgumentException("Erro: Bairro é obrigatório.");
-        if (string.IsNullOrWhiteSpace(city)) throw new ArgumentException("Erro: Cidade é obrigatória.");
-        if (string.IsNullOrWhiteSpace(state)) throw new ArgumentException("Erro: Estado é obrigatório.");
+    public Unit( string name, StatusEnum status, SizeEnum size, TypeEnum type, string cep, string street, string number, string neighborhood, string city, string state, Guid mainOfficeId, decimal? royaltiesPercentage = null) {
+
+        Validate(name, status, size, type, royaltiesPercentage, cep, street, number, neighborhood, city, state);
         if (mainOfficeId == Guid.Empty) throw new ArgumentException("Erro: É necessário vincular a uma Matriz válida.");
-        if (royaltiesPercentage.HasValue && (royaltiesPercentage < 1 || royaltiesPercentage > 100)) throw new ArgumentException("Erro: Royalties deve estar entre 1 e 100.");
-        if (!Enum.IsDefined(status)) throw new ArgumentException("Erro: Status inválido.");
-        if (!Enum.IsDefined(size)) throw new ArgumentException("Erro: Porte (Size) inválido.");
-        if (!Enum.IsDefined(type)) throw new ArgumentException("Erro: Tipo inválido.");
 
         Id = Guid.CreateVersion7();
         Name = name;
@@ -63,5 +40,21 @@ public class Unit {
         State = state;
         MainOfficeId = mainOfficeId;
         RoyaltiesPercentage = royaltiesPercentage;
-}
+    }
+
+    
+
+    private static void Validate(string name, StatusEnum status, SizeEnum size, TypeEnum type, decimal? royaltiesPercentage, string cep, string street, string number, string neighborhood, string city, string state) {
+        if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("Erro: Nome é obrigatório.");
+        if (string.IsNullOrWhiteSpace(cep)) throw new ArgumentException("Erro: CEP é obrigatório.");
+        if (string.IsNullOrWhiteSpace(street)) throw new ArgumentException("Erro: Rua é obrigatória.");
+        if (string.IsNullOrWhiteSpace(number)) throw new ArgumentException("Erro: Número é obrigatório.");
+        if (string.IsNullOrWhiteSpace(neighborhood)) throw new ArgumentException("Erro: Bairro é obrigatório.");
+        if (string.IsNullOrWhiteSpace(city)) throw new ArgumentException("Erro: Cidade é obrigatória.");
+        if (string.IsNullOrWhiteSpace(state)) throw new ArgumentException("Erro: Estado é obrigatório.");
+        if (!Enum.IsDefined(status)) throw new ArgumentException("Erro: Status inválido.");
+        if (!Enum.IsDefined(size)) throw new ArgumentException("Erro: Porte (Size) inválido.");
+        if (!Enum.IsDefined(type)) throw new ArgumentException("Erro: Tipo inválido.");
+        if (royaltiesPercentage.HasValue && (royaltiesPercentage < 1 || royaltiesPercentage > 100)) throw new ArgumentException("Erro: Royalties deve estar entre 1 e 100.");
+    }
 }
