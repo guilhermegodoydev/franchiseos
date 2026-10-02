@@ -7,6 +7,7 @@ import { formatCurrency } from "@/shared/utils";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { TableRowActions } from "../features/TableRowActions";
 
 const columnHelper = createColumnHelper<DataTableFeatures, tableUnit>();
 
@@ -15,7 +16,9 @@ const styles = {
     Inactive: "bg-gray-500/15 text-gray-500 border-gray-400",
 }
 
-export const columns = columnHelper.columns([
+export const columns = ( 
+    onRequestDelete: (unitId: string, unitName: string) => void,
+) => columnHelper.columns([
     columnHelper.accessor("name", {
         header: ({ column }) => {
             return (
@@ -118,5 +121,15 @@ export const columns = columnHelper.columns([
 
             return (<div className="text-center">{label}</div>);
         }
-    })
+    }),
+
+    columnHelper.display({
+        id: "acoes",
+        header: "Ações",
+        cell: ({ row }) => (
+            <TableRowActions 
+                onDelete={() => onRequestDelete(row.original.id, row.original.name)}
+            />
+        ),
+    }),
 ]);

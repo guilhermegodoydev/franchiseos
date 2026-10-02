@@ -9,6 +9,7 @@ import { DataPagination } from "@/shared/ui/Pagination";
 import { redirect } from "next/navigation";
 import { ContainerFilters } from "@/modules/units/features/ContainerFilters";
 import { ButtonRegisterUnit } from "@/modules/units/features/create-unit/ButtonRegisterUnit";
+import { ContainerTable } from "@/modules/units/ui/ContainerTable";
 
 export const metadata: Metadata = {
     title: "FranchiseOS | Unidades",
@@ -83,8 +84,8 @@ export default async function UnitsPage({ searchParams }: UnitPageProps) {
 
             <section className="mt-10">
                 <ContainerFilters states={dataStates} cities={dataCities}/>
-                
-                <DataTable columns={columns} data={dataUnis?.items ?? []}/>
+
+                <ContainerTable data={dataUnis?.items ?? []}/>
 
                 <DataPagination totalPages={dataUnis?.totalPages ?? 1} currentPage={currentPage} />
             </section>

@@ -6,19 +6,15 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Ellipsis, Eye, Pen, TrashIcon } from "lucide-react"
-import { ButtonDesactiveUnit } from "./ButtonDesactiveUnit"
 
-export function TableRowActions() {
+interface TableRowActionsProps {
+  onDelete: (unitId: string) => void;
+}
+
+export function TableRowActions({ onDelete }: TableRowActionsProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger render={<Button variant="ghost"><Ellipsis/></Button>} />
@@ -32,7 +28,7 @@ export function TableRowActions() {
             <Pen/>
             Editar
           </DropdownMenuItem>
-          <DropdownMenuItem variant="destructive">
+          <DropdownMenuItem variant="destructive" onClick={() => onDelete("unitId")}>
             <TrashIcon/>
             Desativar
           </DropdownMenuItem>
