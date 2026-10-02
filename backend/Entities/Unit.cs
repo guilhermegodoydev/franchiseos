@@ -20,6 +20,10 @@ public class Unit {
 
     public ICollection<MonthlyRevenue> MonthlyRevenues { get; private set; } = new List<MonthlyRevenue>();
 
+    public bool IsActive => Status == StatusEnum.Active;
+
+    public void Deactivate() => Status = StatusEnum.Inactive;
+
     private Unit() { }
 
     public Unit( string name, StatusEnum status, SizeEnum size, TypeEnum type, string cep, string street, string number, string neighborhood, string city, string state, Guid mainOfficeId, decimal? royaltiesPercentage = null) {
@@ -42,7 +46,22 @@ public class Unit {
         RoyaltiesPercentage = royaltiesPercentage;
     }
 
-    
+    public void UpdateDetails(string name, StatusEnum status, SizeEnum size, TypeEnum type, string cep, string street, string number, string neighborhood, string city, string state, decimal? royaltiesPercentage)
+    {
+        Validate(name, status, size, type, royaltiesPercentage, cep, street, number, neighborhood, city, state);
+
+        Name = name;
+        Status = status;
+        Size = size;
+        Type = type;
+        Cep = cep;
+        Street = street;
+        Number = number;
+        Neighborhood = neighborhood;
+        City = city;
+        State = state;
+        RoyaltiesPercentage = royaltiesPercentage;
+    }
 
     private static void Validate(string name, StatusEnum status, SizeEnum size, TypeEnum type, decimal? royaltiesPercentage, string cep, string street, string number, string neighborhood, string city, string state) {
         if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("Erro: Nome é obrigatório.");

@@ -1,10 +1,8 @@
 using System.ComponentModel.DataAnnotations;
-using System.Drawing;
 using backend.Dtos;
 using backend.Entities;
 using backend.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace backend.Controllers;
 
@@ -72,5 +70,19 @@ public class UnitController : ControllerBase {
     public async Task<IActionResult> CreateUnit([FromRoute] Guid mainofficeId, [FromBody] CreateUnitDto dto) {
         var result = await _service.CreateUnitAsync(mainofficeId, dto);
         return Ok(result);
+    }
+
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> UpdateUnit([FromRoute] Guid id, [FromBody] UpdateUnitDto dto)
+    {
+        await _service.UpdateUnitAsync(id, dto);
+        return NoContent();
+    }
+
+    [HttpPatch("{id:guid}/deactivate")]
+    public async Task<IActionResult> DeactivateUnit([FromRoute] Guid id)
+    {
+        await _service.DeactivateUnitAsync(id);
+        return NoContent();
     }
 }

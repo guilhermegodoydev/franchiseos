@@ -7,3 +7,8 @@ public abstract class NotFoundException : Exception {
 public abstract class ConflictException : Exception {
     protected ConflictException(string message) : base(message) { }
 }
+
+public abstract class InvalidOperationDomainException : Exception
+{
+    protected InvalidOperationDomainException(string message) : base(message) { }
+}

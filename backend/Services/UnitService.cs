@@ -121,4 +121,25 @@ public class UnitService {
             0
         );
     }
+
+    public async Task UpdateUnitAsync(Guid unitId, UpdateUnitDto dto)
+    {
+        var unit = await _context.Units.FirstOrDefaultAsync(u => u.Id == unitId);
+
+        if (unit is null) throw new UnitNotFoundException(unitId);
+        if (!unit.IsActive) throw new InactiveUnitOperationException(unit.Name);
+
+        unit.UpdateDetails(dto.Name, dto.Status, dto.Size, dto.Type, dto.Cep, dto.Street, dto.Number, dto.Neighborhood, dto.City, dto.State, dto.RoyaltiesPercentage);
+
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task DeactivateUnitAsync(Guid unitId)
+    {
+        var unit = await _context.Units.FirstOrDefaultAsync(u => u.Id == unitId);
+        if (unit is null) throw new UnitNotFoundException(unitId);
+
+        unit.Deactivate();
+        await _context.SaveChangesAsync();
+    }
 }
