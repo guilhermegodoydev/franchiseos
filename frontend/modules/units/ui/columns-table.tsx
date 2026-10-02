@@ -10,15 +10,9 @@ import { Badge } from "@/components/ui/badge";
 
 const columnHelper = createColumnHelper<DataTableFeatures, tableUnit>();
 
-const sizeStyles = {
-    GRANDE: "font-bold",
-    MEDIA: "font-medium text-gray-700",
-    PEQUENA: "font-normal text-gray-500"
-};
-
 const styles = {
-    ATIVA: "bg-green-500/15 text-green-500 border-green-500",
-    SUSPENSA: "bg-gray-500/15 text-gray-500 border-gray-400",
+    Active: "bg-green-500/15 text-green-500 border-green-500",
+    Inactive: "bg-gray-500/15 text-gray-500 border-gray-400",
 }
 
 export const columns = columnHelper.columns([
@@ -30,7 +24,12 @@ export const columns = columnHelper.columns([
                     <ArrowUpDown className="ml-2 h-4 w-4"/>
                 </Button>
             );
-        }
+        },
+        cell: ({ row }) => (
+            <p className="block truncate max-w-[200px]">
+                {row.original.name}
+            </p>
+        ),
     }),
 
     columnHelper.accessor("status", {
@@ -62,18 +61,27 @@ export const columns = columnHelper.columns([
         cell: ({ row }) => {
             const value = row.original.size as UnitSize;
             const formatedValue = UNIT_SIZE_LABEL[value];
-            const style = sizeStyles[value as keyof typeof sizeStyles];
 
-            return (<span className={style}>{formatedValue}</span>);
+            return (<span>{formatedValue}</span>);
         }
     }),
     
     columnHelper.accessor("city", {
-        header: "Cidade"
+        header: "Cidade",
+        cell: ({ row }) => (
+            <p className="block truncate max-w-[200px]">
+                {row.original.city}
+            </p>
+        ),
     }),
 
     columnHelper.accessor("state", {
-        header: "Estado"
+        header: "Estado",
+        cell: ({ row }) => (
+            <p className="text-center">
+                {row.original.state}
+            </p>
+        )
     }),
 
     columnHelper.accessor("revenue", {
