@@ -2,7 +2,7 @@
 
 import { DataTableFeatures } from "@/shared/ui/table/Datatablefeatures";
 import { createColumnHelper } from "@tanstack/react-table";
-import { tableUnit, UNIT_SIZE_LABEL, UNIT_TYPE_LABEL, UnitSize, UnitType } from "../schema";
+import { tableUnit, UNIT_SIZE_LABEL, UNIT_STATUS_LABEL, UNIT_TYPE_LABEL, UnitSize, UnitType } from "../schema";
 import { formatCurrency } from "@/shared/utils";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
@@ -37,10 +37,11 @@ export const columns = columnHelper.columns([
         header: "Status",
         cell: ({ row }) => {
             const value = row.original.status;
+            const formattedValue = UNIT_STATUS_LABEL[value].toUpperCase();
             
             return (
                 <Badge variant="outline" className={styles[value as keyof typeof styles]}>
-                    {value}
+                    {formattedValue}
                 </Badge>
             );
         }
