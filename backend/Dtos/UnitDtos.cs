@@ -7,6 +7,7 @@ public record UnitForListDto (
     Guid Id,
     string Name,
     StatusEnum Status,
+    TypeEnum Type,
     SizeEnum Size,
     string City,
     string State,

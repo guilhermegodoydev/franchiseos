@@ -2,7 +2,7 @@
 
 import { DataTableFeatures } from "@/shared/ui/table/Datatablefeatures";
 import { createColumnHelper } from "@tanstack/react-table";
-import { tableUnit, UNIT_SIZE_LABEL, UnitSize } from "../schema";
+import { tableUnit, UNIT_SIZE_LABEL, UNIT_TYPE_LABEL, UnitSize, UnitType } from "../schema";
 import { formatCurrency } from "@/shared/utils";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
@@ -43,6 +43,16 @@ export const columns = columnHelper.columns([
                     {value}
                 </Badge>
             );
+        }
+    }),
+
+    columnHelper.accessor("type", {
+        header: "Tipo",
+        cell: ({ row }) => {
+            const value = row.original.type as UnitType;
+            const formatedValue = UNIT_TYPE_LABEL[value];
+
+            return (<span>{formatedValue}</span>);
         }
     }),
 

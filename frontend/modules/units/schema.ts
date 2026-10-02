@@ -52,6 +52,7 @@ export const tableUnitSchema = unitSchema.pick({
     id: true,
     name: true,
     status: true,
+    type: true,
     size: true,
     city: true,
     state: true,
