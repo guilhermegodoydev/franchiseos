@@ -12,9 +12,10 @@ import { Ellipsis, Eye, Pen, TrashIcon } from "lucide-react"
 
 interface TableRowActionsProps {
   onDelete: (unitId: string) => void;
+  onUpdate: (unitId: string) => void;
 }
 
-export function TableRowActions({ onDelete }: TableRowActionsProps) {
+export function TableRowActions({ onDelete, onUpdate }: TableRowActionsProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger render={<Button variant="ghost"><Ellipsis/></Button>} />
@@ -24,7 +25,7 @@ export function TableRowActions({ onDelete }: TableRowActionsProps) {
             <Eye/>
             Visualizar
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={() => onUpdate("unitId")}>
             <Pen/>
             Editar
           </DropdownMenuItem>

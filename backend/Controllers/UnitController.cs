@@ -72,6 +72,13 @@ public class UnitController : ControllerBase {
         return Ok(result);
     }
 
+    [HttpGet("{id:guid}")]
+    public async Task<ActionResult<UpdateUnitDto>> GetUnitById([FromRoute] Guid id)
+    {
+        var result = await _service.GetUnitByIdAsync(id);
+        return Ok(result);
+    }
+
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> UpdateUnit([FromRoute] Guid id, [FromBody] UpdateUnitDto dto)
     {

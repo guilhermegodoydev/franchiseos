@@ -28,7 +28,8 @@ public class Unit {
 
     public Unit( string name, StatusEnum status, SizeEnum size, TypeEnum type, string cep, string street, string number, string neighborhood, string city, string state, Guid mainOfficeId, decimal? royaltiesPercentage = null) {
 
-        Validate(name, status, size, type, royaltiesPercentage, cep, street, number, neighborhood, city, state);
+        Validate(name, size, type, royaltiesPercentage, cep, street, number, neighborhood, city, state);
+        if (!Enum.IsDefined(status)) throw new ArgumentException("Erro: Status inválido.");
         if (mainOfficeId == Guid.Empty) throw new ArgumentException("Erro: É necessário vincular a uma Matriz válida.");
 
         Id = Guid.CreateVersion7();
@@ -46,12 +47,11 @@ public class Unit {
         RoyaltiesPercentage = royaltiesPercentage;
     }
 
-    public void UpdateDetails(string name, StatusEnum status, SizeEnum size, TypeEnum type, string cep, string street, string number, string neighborhood, string city, string state, decimal? royaltiesPercentage)
+    public void UpdateDetails(string name, SizeEnum size, TypeEnum type, string cep, string street, string number, string neighborhood, string city, string state, decimal? royaltiesPercentage)
     {
-        Validate(name, status, size, type, royaltiesPercentage, cep, street, number, neighborhood, city, state);
+        Validate(name, size, type, royaltiesPercentage, cep, street, number, neighborhood, city, state);
 
         Name = name;
-        Status = status;
         Size = size;
         Type = type;
         Cep = cep;
@@ -63,7 +63,7 @@ public class Unit {
         RoyaltiesPercentage = royaltiesPercentage;
     }
 
-    private static void Validate(string name, StatusEnum status, SizeEnum size, TypeEnum type, decimal? royaltiesPercentage, string cep, string street, string number, string neighborhood, string city, string state) {
+    private static void Validate(string name, SizeEnum size, TypeEnum type, decimal? royaltiesPercentage, string cep, string street, string number, string neighborhood, string city, string state) {
         if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("Erro: Nome é obrigatório.");
         if (string.IsNullOrWhiteSpace(cep)) throw new ArgumentException("Erro: CEP é obrigatório.");
         if (string.IsNullOrWhiteSpace(street)) throw new ArgumentException("Erro: Rua é obrigatória.");
@@ -71,7 +71,6 @@ public class Unit {
         if (string.IsNullOrWhiteSpace(neighborhood)) throw new ArgumentException("Erro: Bairro é obrigatório.");
         if (string.IsNullOrWhiteSpace(city)) throw new ArgumentException("Erro: Cidade é obrigatória.");
         if (string.IsNullOrWhiteSpace(state)) throw new ArgumentException("Erro: Estado é obrigatório.");
-        if (!Enum.IsDefined(status)) throw new ArgumentException("Erro: Status inválido.");
         if (!Enum.IsDefined(size)) throw new ArgumentException("Erro: Porte (Size) inválido.");
         if (!Enum.IsDefined(type)) throw new ArgumentException("Erro: Tipo inválido.");
         if (royaltiesPercentage.HasValue && (royaltiesPercentage < 1 || royaltiesPercentage > 100)) throw new ArgumentException("Erro: Royalties deve estar entre 1 e 100.");

@@ -18,6 +18,7 @@ const styles = {
 
 export const columns = ( 
     onRequestDelete: (unitId: string, unitName: string) => void,
+    onRequestUpdate: (unitId: string) => void
 ) => columnHelper.columns([
     columnHelper.accessor("name", {
         header: ({ column }) => {
@@ -129,6 +130,7 @@ export const columns = (
         cell: ({ row }) => (
             <TableRowActions 
                 onDelete={() => onRequestDelete(row.original.id, row.original.name)}
+                onUpdate={() => onRequestUpdate(row.original.id)}
             />
         ),
     }),

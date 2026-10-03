@@ -9,16 +9,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Field, FieldGroup, FieldError, FieldLabel } from "@/components/ui/field";
-import { unitSchema, UNIT_STATUS_LABEL, UNIT_TYPE_LABEL, UNIT_SIZE_LABEL } from "@/modules/units/schema";
-import { createUnit } from "@/modules/units/actions";
+import { unitSchema, UNIT_STATUS_LABEL, UNIT_TYPE_LABEL, UNIT_SIZE_LABEL, CreateUnitFormData, UpdateUnitFormData, createUnitSchema } from "@/modules/units/schema";
+import { createUnit, updateUnit } from "@/modules/units/actions";
 import { getAddressByCep } from "@/shared/actions";
 import { FormTextField } from "@/shared/ui/form/FormTextField";
 import { FormFilterField } from "@/shared/ui/form/FormFilterField";
 import { IMaskInput } from 'react-imask';
 import { CONFIG_MASKS } from "@/shared/consts";
-
-const createUnitSchema = unitSchema.omit({ id: true, main_office_id: true });
-type CreateUnitFormData = z.infer<typeof createUnitSchema>;
 
 const defaultValues: CreateUnitFormData = {
   name: "",
@@ -44,12 +41,15 @@ const STEPS: { title: string; fields: (keyof CreateUnitFormData)[] }[] = [
 interface CreateUnitDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  mainOfficeId: string;
+  mainOfficeId?: string;
+  unitId?: string;
+  unit?: UpdateUnitFormData;
 }
 
-export function CreateUnitDialog({ open, onOpenChange, mainOfficeId }: CreateUnitDialogProps) {
+export function CreateUnitDialog({ open, onOpenChange, mainOfficeId, unitId, unit }: CreateUnitDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [step, setStep] = useState(0);
+  const isEditMode = !!unitId;
 
   const { control, register, setValue, handleSubmit, trigger, clearErrors, reset, formState: { errors }, } = useForm<CreateUnitFormData>({
     resolver: zodResolver(createUnitSchema),
@@ -59,11 +59,12 @@ export function CreateUnitDialog({ open, onOpenChange, mainOfficeId }: CreateUni
   });
 
   useEffect(() => {
-    if (!open) {
-      reset(defaultValues);
+    if (open) {
+      reset(unit ? { ...unit, status: "Active" as any } : defaultValues);
+    } else {
       setStep(0);
     }
-  }, [open, reset]);
+  }, [open, unit, reset]);
 
   const isLastStep = step === STEPS.length - 1;
 
@@ -79,7 +80,13 @@ export function CreateUnitDialog({ open, onOpenChange, mainOfficeId }: CreateUni
 
   const onSubmit = async (data: CreateUnitFormData) => {
     setIsSubmitting(true);
-    const result = await createUnit(mainOfficeId, data);
+
+    const { status, ...rest } = data;
+
+    const result = isEditMode
+      ? await updateUnit(unitId!, rest)
+      : await createUnit(mainOfficeId!, data);
+
     setIsSubmitting(false);
 
     if (!result.success) {
@@ -87,7 +94,7 @@ export function CreateUnitDialog({ open, onOpenChange, mainOfficeId }: CreateUni
       return;
     }
 
-    toast.success("Unidade criada com sucesso");
+    toast.success(isEditMode ? "Unidade atualizada com sucesso" : "Unidade criada com sucesso");
     onOpenChange(false);
   };
 
@@ -110,7 +117,7 @@ export function CreateUnitDialog({ open, onOpenChange, mainOfficeId }: CreateUni
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Nova unidade</DialogTitle>
+          <DialogTitle>{isEditMode ? "Editar unidade" : "Nova unidade"}</DialogTitle>
           <p className="text-sm text-muted-foreground">
             Etapa {step + 1} de {STEPS.length} — {STEPS[step].title}
           </p>
@@ -124,14 +131,16 @@ export function CreateUnitDialog({ open, onOpenChange, mainOfficeId }: CreateUni
 
             {step === 1 && (
               <>
-                <FormFilterField 
-                  name="status" 
-                  control={control} 
-                  label="Status" 
-                  items={UNIT_STATUS_LABEL}
-                  placeholder="Selecione o status"
-                  error={errors.status?.message}
-                />
+                {!isEditMode && (
+                  <FormFilterField 
+                    name="status" 
+                    control={control} 
+                    label="Status" 
+                    items={UNIT_STATUS_LABEL}
+                    placeholder="Selecione o status"
+                    error={errors.status?.message}
+                  />
+                )}
 
                 <FormFilterField 
                   name="type" 
@@ -164,6 +173,7 @@ export function CreateUnitDialog({ open, onOpenChange, mainOfficeId }: CreateUni
                       render={({ field }) => (
                         <IMaskInput
                           mask={CONFIG_MASKS.cep}
+                          value={field.value}
                           onAccept={(value, maskRef) => field.onChange(maskRef.unmaskedValue)}
                           onBlur={(e) => {
                             field.onBlur();
@@ -228,7 +238,7 @@ export function CreateUnitDialog({ open, onOpenChange, mainOfficeId }: CreateUni
             )}
             {isLastStep ? (
               <Button key="btn-submit" type="submit" disabled={isSubmitting}>
-                {isSubmitting ? "Criando..." : "Criar unidade"}
+                {isSubmitting ? "Salvando..." : isEditMode ? "Salvar alterações" : "Criar unidade"}
               </Button>
             ) : (
               <Button key="btn-next" type="button" onClick={handleNext}>

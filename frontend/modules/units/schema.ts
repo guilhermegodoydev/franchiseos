@@ -67,6 +67,12 @@ export type tableUnit = z.output<typeof tableUnitSchema>;
 //                  Cases
 //===========================================
 
+export const createUnitSchema = unitSchema.omit({ id: true, main_office_id: true });
+export type CreateUnitFormData = z.infer<typeof createUnitSchema>;
+
+export const updateUnitSchema = createUnitSchema.omit({ status: true });
+export type UpdateUnitFormData = z.infer<typeof updateUnitSchema>;
+
 export const unitMostRevenue = unitSchema.pick({
     name: true,
 }).extend({

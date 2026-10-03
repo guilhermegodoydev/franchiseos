@@ -48,7 +48,6 @@ public record CreateUnitDto(
 
 public record UpdateUnitDto(
     [Required, StringLength(150, MinimumLength = 3)] string Name,
-    [Required] StatusEnum Status,
     [Required] SizeEnum Size,
     [Required] TypeEnum Type,
     [Required, StringLength(9, MinimumLength = 8)] string Cep,

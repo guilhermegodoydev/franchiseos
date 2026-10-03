@@ -129,9 +129,8 @@ public class UnitService {
         var unit = await _context.Units.FirstOrDefaultAsync(u => u.Id == unitId);
 
         if (unit is null) throw new UnitNotFoundException(unitId);
-        if (!unit.IsActive) throw new InactiveUnitOperationException(unit.Name);
 
-        unit.UpdateDetails(dto.Name, dto.Status, dto.Size, dto.Type, dto.Cep, dto.Street, dto.Number, dto.Neighborhood, dto.City, dto.State, dto.RoyaltiesPercentage);
+        unit.UpdateDetails(dto.Name, dto.Size, dto.Type, dto.Cep, dto.Street, dto.Number, dto.Neighborhood, dto.City, dto.State, dto.RoyaltiesPercentage);
 
         await _context.SaveChangesAsync();
     }
@@ -143,5 +142,25 @@ public class UnitService {
 
         unit.Deactivate();
         await _context.SaveChangesAsync();
+    }
+
+    public async Task<UpdateUnitDto> GetUnitByIdAsync(Guid unitId)
+    {
+        var unit = await _context.Units.FirstOrDefaultAsync(u => u.Id == unitId);
+
+        if (unit is null) throw new UnitNotFoundException(unitId);
+
+        return new UpdateUnitDto(
+            unit.Name,
+            unit.Size,
+            unit.Type,
+            unit.Cep,
+            unit.Street,
+            unit.Number,
+            unit.Neighborhood,
+            unit.City,
+            unit.State,
+            unit.RoyaltiesPercentage
+        );
     }
 }
