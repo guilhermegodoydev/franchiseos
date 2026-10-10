@@ -11,6 +11,7 @@ public class ApplicationDbContext: DbContext {
     public DbSet<MainOffice> MainOffices { get; set; }
     public DbSet<Unit> Units { get; set; }
     public DbSet<MonthlyRevenue> MonthlyRevenues { get; set; }
+    public DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -50,6 +51,15 @@ public class ApplicationDbContext: DbContext {
             m.Property(u => u.CreatedAt).IsRequired();
 
             m.HasOne(u => u.Unit).WithMany(m => m.MonthlyRevenues).HasForeignKey(u => u.UnitId).OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<User>(entity => {
+            entity.HasKey(u => u.Id);
+            entity.Property(u => u.Email).IsRequired().HasMaxLength(200);
+            entity.HasIndex(u => u.Email).IsUnique();
+            entity.Property(u => u.PasswordHash).IsRequired();
+            entity.Property(u => u.Role).IsRequired().HasConversion<string>().HasMaxLength(20);
+            entity.HasOne(u => u.MainOffice).WithMany().HasForeignKey(u => u.MainOfficeId).OnDelete(DeleteBehavior.Restrict);
         });
     }
 }

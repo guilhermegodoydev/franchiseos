@@ -8,6 +8,11 @@ public abstract class ConflictException : Exception {
     protected ConflictException(string message) : base(message) { }
 }
 
+public abstract class UnauthorizedException : Exception
+{
+    protected UnauthorizedException(string message) : base(message) { }
+}
+
 public abstract class InvalidOperationDomainException : Exception
 {
     protected InvalidOperationDomainException(string message) : base(message) { }

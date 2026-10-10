@@ -58,6 +58,14 @@ public static class SeedDb {
             }
         }
 
+        var ownerUser = new User(
+            email: "dono@franchiseos.com",
+            passwordHash: BCrypt.Net.BCrypt.HashPassword("Senha123!"),
+            role: UserRole.Owner,
+            mainOfficeId: mainOfficeId
+        );
+
+        context.Users.Add(ownerUser);
         context.MainOffices.Add(mainOffice);
         context.Units.AddRange(fakeUnits);
         context.SaveChanges();

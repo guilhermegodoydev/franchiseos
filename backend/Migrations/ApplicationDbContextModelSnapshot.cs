@@ -143,6 +143,39 @@ namespace backend.Migrations
                     b.ToTable("Units");
                 });
 
+            modelBuilder.Entity("backend.Entities.User", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<Guid?>("MainOfficeId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("MainOfficeId");
+
+                    b.ToTable("Users");
+                });
+
             modelBuilder.Entity("backend.Entities.MonthlyRevenue", b =>
                 {
                     b.HasOne("backend.Entities.Unit", "Unit")
@@ -161,6 +194,16 @@ namespace backend.Migrations
                         .HasForeignKey("MainOfficeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("MainOffice");
+                });
+
+            modelBuilder.Entity("backend.Entities.User", b =>
+                {
+                    b.HasOne("backend.Entities.MainOffice", "MainOffice")
+                        .WithMany()
+                        .HasForeignKey("MainOfficeId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("MainOffice");
                 });

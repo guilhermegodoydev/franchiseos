@@ -1,11 +1,13 @@
-using System.ComponentModel.DataAnnotations;
 using backend.Dtos;
 using backend.Entities;
+using backend.Extensions;
 using backend.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/units")]
 public class UnitController : ControllerBase {
@@ -15,81 +17,40 @@ public class UnitController : ControllerBase {
         this._service = service;
     }
 
-    [HttpGet("office/{mainofficeId:guid}")]
-    public async Task<IActionResult> GetUnitsOffice(
-        [FromRoute] Guid mainofficeId, 
-        [FromQuery] StatusEnum? status, 
-        [FromQuery] SizeEnum? size, 
-        [FromQuery] TypeEnum? type,
-        [FromQuery] string? state, 
-        [FromQuery] string? city,
-        [FromQuery] string? searchName,
-        [FromQuery, Required] int? month,
-        [FromQuery, Required] int? year,
-        [FromQuery] int page = 1,
-        [FromQuery] int itemsPerPage = 20
-    ) {
-        var result = await _service.GetUnitsOfficeAsync(mainofficeId, type, page, itemsPerPage, status, size, state, city, searchName, month.Value, year.Value);
-        return Ok(result);
-    }
+    [Authorize(Roles = nameof(UserRole.Owner))]
+    [HttpPost]
+    public async Task<IActionResult> CreateUnit([FromBody] CreateUnitDto dto) {
 
-    [HttpGet("states/{mainofficeId:guid}")]
-    public async Task<ActionResult<List<string>>> GetStates([FromRoute] Guid mainofficeId, [FromQuery] TypeEnum? type) {
-        var result = await _service.GetStatesAsync(mainofficeId, type);
-        return result;
-    }
+        var mainOfficeId = User.GetMainOfficeId();
 
-    [HttpGet("cities/{mainofficeId:guid}")]
-    public async Task<ActionResult<List<string>>> GetCities([FromRoute] Guid mainofficeId, [FromQuery] string state, [FromQuery] TypeEnum? type) {
-        var result = await _service.GetCitiesInStateAsync(mainofficeId, state, type);
-        return result;
-    }
-
-    [HttpGet("metrics/{mainofficeId:guid}")]
-    public async Task<ActionResult<MetricsUnitsDto>> GetUnitsMetrics([FromRoute] Guid mainofficeId) {
-
-        // TODO: Implementar lógica real de BI na Fase 3 após concluir os CRUDs de faturamento e royalties.
-        // TODO: Calcular métricas líquidas (Lojas Próprias [Bruto] + Franquias [Apenas Royalties]) usando dados do mês anterior consolidado.
-        // TODO: Implementar lógica de BI na Fase 3 após concluir os CRUDs de faturamento e royalties.
-
-        // Lógica futura: Unidades Próprias (Faturamento Bruto) + Franquias (Apenas Royalties).
-        
-        var mockMetrics = new MetricsUnitsDto(
-            MostRevenue: new MostRevenueInMonth(
-                Name: "Unidade Própria Paulista", 
-                Revenue: 52000.00m
-            ),
-            Decrease: -4.2m,
-            Health: "Estável"
-        );
-        
-        return Ok(mockMetrics);
-    }
-
-    [HttpPost("office/{mainofficeId:guid}")]
-    public async Task<IActionResult> CreateUnit([FromRoute] Guid mainofficeId, [FromBody] CreateUnitDto dto) {
-        var result = await _service.CreateUnitAsync(mainofficeId, dto);
+        var result = await _service.CreateUnitAsync(mainOfficeId, dto);
         return Ok(result);
     }
 
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<UpdateUnitDto>> GetUnitById([FromRoute] Guid id)
     {
-        var result = await _service.GetUnitByIdAsync(id);
+        var mainOfficeId = User.GetMainOfficeId();
+        var result = await _service.GetUnitByIdAsync(id, mainOfficeId);
         return Ok(result);
     }
 
+    [Authorize(Roles =nameof(UserRole.Owner))]
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> UpdateUnit([FromRoute] Guid id, [FromBody] UpdateUnitDto dto)
     {
-        await _service.UpdateUnitAsync(id, dto);
+        var mainofficeId = User.GetMainOfficeId();
+        await _service.UpdateUnitAsync(id, mainofficeId, dto);
         return NoContent();
     }
 
+    [Authorize(Roles = nameof(UserRole.Owner))]
     [HttpPatch("{id:guid}/deactivate")]
     public async Task<IActionResult> DeactivateUnit([FromRoute] Guid id)
     {
-        await _service.DeactivateUnitAsync(id);
+        var mainOfficeId = User.GetMainOfficeId();
+
+        await _service.DeactivateUnitAsync(id, mainOfficeId);
         return NoContent();
     }
 }

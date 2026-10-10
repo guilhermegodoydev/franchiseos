@@ -16,3 +16,5 @@ public enum TypeEnum {
     Own = 1,
     Franchise = 2
 }
+
+public enum UserRole { Owner }

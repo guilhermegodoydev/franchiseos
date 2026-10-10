@@ -124,9 +124,9 @@ public class UnitService {
         );
     }
 
-    public async Task UpdateUnitAsync(Guid unitId, UpdateUnitDto dto)
+    public async Task UpdateUnitAsync(Guid unitId, Guid officeId, UpdateUnitDto dto)
     {
-        var unit = await _context.Units.FirstOrDefaultAsync(u => u.Id == unitId);
+        var unit = await _context.Units.FirstOrDefaultAsync(u => u.Id == unitId && u.MainOfficeId == officeId);
 
         if (unit is null) throw new UnitNotFoundException(unitId);
 
@@ -135,18 +135,19 @@ public class UnitService {
         await _context.SaveChangesAsync();
     }
 
-    public async Task DeactivateUnitAsync(Guid unitId)
+    public async Task DeactivateUnitAsync(Guid unitId, Guid officeId)
     {
-        var unit = await _context.Units.FirstOrDefaultAsync(u => u.Id == unitId);
-        if (unit is null) throw new UnitNotFoundException(unitId);
+        var unit = await _context.Units
+            .FirstOrDefaultAsync(u => u.Id == unitId && u.MainOfficeId == officeId)
+            ?? throw new UnitNotFoundException(unitId);
 
         unit.Deactivate();
         await _context.SaveChangesAsync();
     }
 
-    public async Task<UpdateUnitDto> GetUnitByIdAsync(Guid unitId)
+    public async Task<UpdateUnitDto> GetUnitByIdAsync(Guid unitId, Guid officeId)
     {
-        var unit = await _context.Units.FirstOrDefaultAsync(u => u.Id == unitId);
+        var unit = await _context.Units.FirstOrDefaultAsync(u => u.Id == unitId && u.MainOfficeId == officeId);
 
         if (unit is null) throw new UnitNotFoundException(unitId);
 
