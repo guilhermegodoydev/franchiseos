@@ -10,6 +10,7 @@ import { redirect } from "next/navigation";
 import { ContainerFilters } from "@/modules/units/features/ContainerFilters";
 import { ButtonRegisterUnit } from "@/modules/units/features/create-unit/ButtonRegisterUnit";
 import { ContainerTable } from "@/modules/units/ui/ContainerTable";
+import { authFetch } from "@/shared/api";
 
 export const metadata: Metadata = {
     title: "FranchiseOS | Unidades",
@@ -45,9 +46,9 @@ export default async function UnitsPage({ searchParams }: UnitPageProps) {
     const queryString = params.toString();
 
     const [resUnits, resMetrics, resStates] = await Promise.all([
-        fetch(`http://localhost:5189/api/units/office/01a0dea4-983d-7123-a123-123456789abc?${queryString}`, { next: { tags: ["units-office"] }}),
-        fetch("http://localhost:5189/api/units/metrics/01a0dea4-983d-7123-a123-123456789abc", { next: { tags: ["units-metrics"] }}),
-        fetch("http://localhost:5189/api/units/states/01a0dea4-983d-7123-a123-123456789abc", { next: { revalidate: 3600 }}),
+        authFetch(`/api/offices/units?${queryString}`, { next: { tags: ["units-office"] } }),
+        authFetch(`/api/offices/metrics`, { next: { tags: ["units-metrics"] } }),
+        authFetch(`/api/offices/states`, { next: { revalidate: 3600 } }),
     ]);
 
     const [dataMetrics, dataStates, dataUnis] = await Promise.all([
@@ -59,7 +60,7 @@ export default async function UnitsPage({ searchParams }: UnitPageProps) {
     let dataCities: string[] = [];
 
     if (filters.state) {
-        const resCities = await fetch(`http://localhost:5189/api/units/cities/01a0dea4-983d-7123-a123-123456789abc?state=${filters.state}`, { next: { revalidate: 3600 } });
+        const resCities = await authFetch(`/api/offices/cities?state=${filters.state}`, { next: { revalidate: 3600 } });
         dataCities = await resCities.json();
     }
 
@@ -84,7 +85,7 @@ export default async function UnitsPage({ searchParams }: UnitPageProps) {
 
             <section className="mt-10">
                 <ContainerFilters states={dataStates} cities={dataCities}/>
-
+                <p className="text-indigo-500 font-semibold">{dataUnis?.totalItems} unidades encontrados</p>
                 <ContainerTable data={dataUnis?.items ?? []}/>
 
                 <DataPagination totalPages={dataUnis?.totalPages ?? 1} currentPage={currentPage} />

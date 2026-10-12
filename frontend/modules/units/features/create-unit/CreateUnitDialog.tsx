@@ -41,12 +41,11 @@ const STEPS: { title: string; fields: (keyof CreateUnitFormData)[] }[] = [
 interface CreateUnitDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  mainOfficeId?: string;
   unitId?: string;
   unit?: UpdateUnitFormData;
 }
 
-export function CreateUnitDialog({ open, onOpenChange, mainOfficeId, unitId, unit }: CreateUnitDialogProps) {
+export function CreateUnitDialog({ open, onOpenChange, unitId, unit }: CreateUnitDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [step, setStep] = useState(0);
   const isEditMode = !!unitId;
@@ -85,7 +84,7 @@ export function CreateUnitDialog({ open, onOpenChange, mainOfficeId, unitId, uni
 
     const result = isEditMode
       ? await updateUnit(unitId!, rest)
-      : await createUnit(mainOfficeId!, data);
+      : await createUnit(data);
 
     setIsSubmitting(false);
 

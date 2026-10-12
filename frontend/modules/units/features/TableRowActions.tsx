@@ -21,10 +21,10 @@ export function TableRowActions({ onDelete, onUpdate }: TableRowActionsProps) {
       <DropdownMenuTrigger render={<Button variant="ghost"><Ellipsis/></Button>} />
       <DropdownMenuContent className="w-40" align="start">
         <DropdownMenuGroup>
-          <DropdownMenuItem>
+          {/* <DropdownMenuItem>
             <Eye/>
             Visualizar
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
           <DropdownMenuItem onClick={() => onUpdate("unitId")}>
             <Pen/>
             Editar

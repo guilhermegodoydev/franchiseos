@@ -42,11 +42,11 @@ export function ContainerFilters({ states, cities }: { states: string[], cities:
                     <Filter placeholder="Filtrar por Cidade" value={searchParams.get("city") ?? ""} items={cities} name="city" onChange={handleAlterFiler}/>
                 </div>
 
-                <div className="flex gap-3">
+                {/* <div className="flex gap-3">
                     <Button variant="secondary">
                         <Download/>
                     </Button>
-                </div>
+                </div> */}
             </div>
         </>
     );

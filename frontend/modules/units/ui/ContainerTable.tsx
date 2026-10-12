@@ -44,7 +44,10 @@ export function ContainerTable({ data }: { data: tableUnit[] | [] }) {
 
     return (
         <>
-            <DataTable columns={columns(setDelete, setUpdate)} data={data}/>
+            <DataTable
+                columns={columns(setDelete, setUpdate)}
+                data={data}
+            />
 
             <ConfirmDialog
                 open={!!deleteUnit.id}

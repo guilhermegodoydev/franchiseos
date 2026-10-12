@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { TableRowActions } from "../features/TableRowActions";
+import { ReactNode } from "react";
 
 const columnHelper = createColumnHelper<DataTableFeatures, tableUnit>();
 
@@ -30,7 +31,7 @@ export const columns = (
             );
         },
         cell: ({ row }) => (
-            <p className="block truncate max-w-[200px]">
+            <p className="block min-w-[120px] max-w-[120px] truncate" title={row.original.name}>
                 {row.original.name}
             </p>
         ),
@@ -66,21 +67,21 @@ export const columns = (
             const value = row.original.size as UnitSize;
             const formatedValue = UNIT_SIZE_LABEL[value];
 
-            return (<span>{formatedValue}</span>);
+            return (<p title={formatedValue}>{formatedValue}</p>);
         }
     }),
     
     columnHelper.accessor("city", {
         header: "Cidade",
         cell: ({ row }) => (
-            <p className="block truncate max-w-[200px]">
+            <p className="block min-w-[100px] max-w-[100px] truncate" title={row.original.city}>
                 {row.original.city}
             </p>
         ),
     }),
 
     columnHelper.accessor("state", {
-        header: "Estado",
+        header: () => (<p className="text-center">Estado</p>),
         cell: ({ row }) => (
             <p className="text-center">
                 {row.original.state}

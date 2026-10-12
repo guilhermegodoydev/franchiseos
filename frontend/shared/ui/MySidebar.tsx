@@ -1,7 +1,7 @@
 "use client";
 
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarProvider } from "@/components/ui/sidebar";
-import { Building2 } from "lucide-react";
+import { Building2, LogOut } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Field, FieldGroup, FieldError } from "@/components/ui/field";
@@ -11,6 +11,8 @@ import { z } from "zod";
 import { Filter } from "./Filter";
 import { MONTHS, YEARS } from "../consts";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { logoutUser } from "@/modules/auth/actions";
 
 const dateReferenceSchema = z.object({
   month: z.string().min(1, "Selecione o mês"),
@@ -23,6 +25,7 @@ export function MySidebar() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const [ isPending, setIsPending ] = useState(false);
 
   const { control, handleSubmit, formState: { errors } } = useForm<DateReferenceFormData>({
     resolver: zodResolver(dateReferenceSchema),
@@ -39,6 +42,13 @@ export function MySidebar() {
 
     router.push(`${pathname}?${params}`);
   };
+
+  const handleLogout = async () => {
+    setIsPending(true);
+    await logoutUser();
+    
+    router.replace("/login");
+  }
 
   return (
     <Sidebar>
@@ -112,7 +122,29 @@ export function MySidebar() {
           </SidebarGroupContent>
 
           <hr className="my-3"/>
-
+          
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <Button 
+                variant="destructive" 
+                className={`bg-transparent ${isPending ? "cursor-not-allowed" : ""}`}
+                disabled={isPending}
+                onClick={handleLogout}
+              >
+                {isPending ? (
+                  <>
+                    <div className="animate-spin rounded-full border-2 border-transparent border-t-red-500 w-5 h-5"></div>
+                    Saindo...
+                  </>
+                ) : (
+                  <>
+                    <LogOut className="rotate-180"/>
+                    Sair
+                  </>
+                )}
+              </Button>
+            </SidebarMenu>
+          </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
     </Sidebar>
