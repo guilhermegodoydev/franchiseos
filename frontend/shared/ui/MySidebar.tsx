@@ -116,7 +116,7 @@ export function MySidebar() {
                   </Field>
                 </FieldGroup>
 
-                <Button type="submit" className="mt-3 w-full">Alterar</Button>
+                <Button variant="outline" type="submit" className="mt-3 w-full">Alterar</Button>
               </form>
             </SidebarMenu>
           </SidebarGroupContent>
