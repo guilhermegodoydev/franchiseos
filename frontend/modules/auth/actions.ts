@@ -2,6 +2,7 @@
 
 import { cookies } from "next/headers";
 import { LoginFormData, loginSchema } from "./schema";
+import { authFetch } from "@/shared/api";
 
 interface LoginResult {
   success: boolean;
@@ -15,7 +16,7 @@ export async function loginUser(data: LoginFormData): Promise<LoginResult> {
   }
 
   try {
-    const res = await fetch("http://localhost:5189/api/auth/login", {
+    const res = await authFetch("/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(parsed.data),
