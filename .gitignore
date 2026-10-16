@@ -55,6 +55,15 @@ frontend/.vercel/
 # TypeScript cache
 frontend/*.tsbuildinfo
 
+# TypeScript type declarations generates by Next
+frontend/next-env.d.ts
+
+# Yarn exceptions
+!frontend/.yarn/patches/
+!frontend/.yarn/plugins/
+!frontend/.yarn/releases/
+!frontend/.yarn/versions/
+
 # ==========================================
 # GLOBAL OPERATIONAL SYSTEM FILES
 # ==========================================

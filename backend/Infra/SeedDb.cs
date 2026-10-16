@@ -1,0 +1,73 @@
+using backend.Entities;
+using Bogus;
+using Microsoft.EntityFrameworkCore;
+
+namespace backend.Infra;
+
+public static class SeedDb {
+    public static void Seed(ApplicationDbContext context) {
+        context.Database.Migrate();
+
+        if (context.Units.Any()) {
+            return;
+        }
+
+        string[] neighbors = ["Centro", "Jardins", "Vila Mariana", "Botafogo", "Copacabana", "Boa Viagem", "Meireles", "Savassi"]; 
+
+        Guid mainOfficeId = Guid.Parse("01a0dea4-983d-7123-a123-123456789abc");
+        var mainOffice = new MainOffice(
+            mainOfficeId,
+            "77143715000128",
+            "Pão de Açucar",
+            false
+        );
+
+        var unitFaker = new Faker<Unit>("pt_BR")
+            .CustomInstantiator(f => new Unit(
+                name: f.Company.CompanyName(),
+                status: f.PickRandom<StatusEnum>(),
+                size: f.PickRandom<SizeEnum>(),
+                type: f.PickRandom<TypeEnum>(),
+                cep: f.Address.ZipCode("#####-###"), 
+                street: f.Address.StreetName(),
+                number: f.Address.BuildingNumber(),
+                neighborhood: f.PickRandom(neighbors),
+                city: f.Address.City(),
+                state: f.Address.StateAbbr(),
+                mainOfficeId: mainOfficeId,
+                royaltiesPercentage: f.Random.Number(1,100).OrNull(f, 0.2f)
+            ));
+
+        List<Unit> fakeUnits = unitFaker.Generate(50);
+        
+        var faker = new Faker("pt_BR");
+
+        foreach (Unit u in fakeUnits) {
+            int quantidadeMeses = faker.Random.Int(0, 12); 
+
+            for (int mes = 1; mes <= quantidadeMeses; mes++) {
+                
+                var mr = new MonthlyRevenue(
+                    unitId: u.Id,
+                    revenue: faker.Finance.Amount(1000m, 50000m),
+                    month: mes,
+                    year: 2026
+                );
+
+                u.MonthlyRevenues.Add(mr);
+            }
+        }
+
+        var ownerUser = new User(
+            email: "dono@franchiseos.com",
+            passwordHash: BCrypt.Net.BCrypt.HashPassword("Senha123!"),
+            role: UserRole.Owner,
+            mainOfficeId: mainOfficeId
+        );
+
+        context.Users.Add(ownerUser);
+        context.MainOffices.Add(mainOffice);
+        context.Units.AddRange(fakeUnits);
+        context.SaveChanges();
+    }
+}
