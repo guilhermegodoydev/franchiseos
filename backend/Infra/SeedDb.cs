@@ -65,8 +65,9 @@ public static class SeedDb {
             mainOfficeId: mainOfficeId
         );
 
-        context.Users.Add(ownerUser);
         context.MainOffices.Add(mainOffice);
+        context.Users.Add(ownerUser);
+        context.SaveChanges();
         context.Units.AddRange(fakeUnits);
         context.SaveChanges();
     }
