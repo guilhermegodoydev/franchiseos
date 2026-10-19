@@ -2,6 +2,18 @@
 
 Sistema web para gerenciamento de franquias, com autenticação própria e controle de unidades por franqueadora. Já está em produção na primeira versão (CRUD de unidades + autenticação) e evolui para um sistema completo de gestão.
 
+##  Acesso à demo
+
+Para testar sem precisar criar conta, use as credenciais abaixo:
+
+| Campo | Valor |
+|---|---|
+| E-mail | dono@franchiseos.com |
+| Senha | Senha123! |
+| Perfil | Dono da franquia |
+
+> Conta de demonstração com dados fictícios. Os dados podem ser alterados ou resetados a qualquer momento.
+
 🔗 **Demo:** [FranchiseOS](https://franchiseos-plum.vercel.app/login)
 
 ## Screenshots
