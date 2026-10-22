@@ -18,7 +18,10 @@ Para testar sem precisar criar conta, use as credenciais abaixo:
 
 ## Screenshots
 
-[prints das telas: login, listagem de unidades, formulário de unidade]
+<p align="center">
+  <img src="images/tela_login.png" alt="Tela Login" width="100%" style="max-width: 100%; min-width: 300px; margin: 10px;" />
+  <img src="images/tela_inicial.png" alt="Tela Inicial" width="100%" style="max-width: 100%; min-width: 300px; margin: 10px;" />
+</p>
 
 ## Funcionalidades atuais
 
