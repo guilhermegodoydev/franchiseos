@@ -6,10 +6,12 @@ import { useMemo } from "react";
 
 interface DataPaginationProps {
   totalPages: number;
+  registerName: string;
+  totalItems: number;
   currentPage: number;
 }
 
-export function DataPagination({ totalPages, currentPage }: DataPaginationProps) {
+export function DataPagination({ totalItems, registerName, totalPages, currentPage }: DataPaginationProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -48,47 +50,55 @@ export function DataPagination({ totalPages, currentPage }: DataPaginationProps)
   if (totalPages <= 1) return null;
 
   return (
-    <Pagination>
-      <PaginationContent>
-        <PaginationItem>
-          <PaginationPrevious
-            href={buildPageUrl(currentPage - 1)}
-            onClick={(e) => {
-              e.preventDefault();
-              goToPage(currentPage - 1);
-            }}
-            aria-disabled={currentPage <= 1}
-            className={currentPage <= 1 ? "pointer-events-none opacity-50" : undefined}
-          />
-        </PaginationItem>
+    <div className="flex justify-between items-center">
+      <p className="text-muted-foreground">{totalItems} {registerName}</p>
 
-        {visiblePages.map((page) => (
-          <PaginationItem key={page}>
-            <PaginationLink
-              href={buildPageUrl(page)}
-              isActive={page === currentPage}
+      <Pagination className="w-fit">
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious
+              text="Anterior"
+              href={buildPageUrl(currentPage - 1)}
               onClick={(e) => {
                 e.preventDefault();
-                goToPage(page);
+                goToPage(currentPage - 1);
               }}
-            >
-              {page}
-            </PaginationLink>
+              aria-disabled={currentPage <= 1}
+              className={currentPage <= 1 ? "pointer-events-none opacity-50" : undefined}
+            />
           </PaginationItem>
-        ))}
 
-        <PaginationItem>
-          <PaginationNext
-            href={buildPageUrl(currentPage + 1)}
-            onClick={(e) => {
-              e.preventDefault();
-              goToPage(currentPage + 1);
-            }}
-            aria-disabled={currentPage >= totalPages}
-            className={currentPage >= totalPages ? "pointer-events-none opacity-50" : undefined}
-          />
-        </PaginationItem>
-      </PaginationContent>
-    </Pagination>
+          {visiblePages.map((page) => (
+            <PaginationItem key={page}>
+              <PaginationLink
+                href={buildPageUrl(page)}
+                isActive={page === currentPage}
+                onClick={(e) => {
+                  e.preventDefault();
+                  goToPage(page);
+                }}
+              >
+                {page}
+              </PaginationLink>
+            </PaginationItem>
+          ))}
+
+          <PaginationItem>
+            <PaginationNext
+              text="Próximo"
+              href={buildPageUrl(currentPage + 1)}
+              onClick={(e) => {
+                e.preventDefault();
+                goToPage(currentPage + 1);
+              }}
+              aria-disabled={currentPage >= totalPages}
+              className={currentPage >= totalPages ? "pointer-events-none opacity-50" : undefined}
+            />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
+
+      <p className="text-muted-foreground">Página {currentPage} de {totalPages}</p>
+    </div>
   );
 }
