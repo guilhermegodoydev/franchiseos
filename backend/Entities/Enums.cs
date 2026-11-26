@@ -18,3 +18,19 @@ public enum TypeEnum {
 }
 
 public enum UserRole { Owner }
+
+public enum StatusRoyaltyEnum
+{
+    Pending = 1,
+    Overdue = 2,
+    Paid = 3,
+    Cancelled = 4
+}
+
+public enum PayMethodEnum
+{
+    BankSlip = 1,
+    Pix = 2,
+    BankTransfer = 3,
+    Other = 4
+}

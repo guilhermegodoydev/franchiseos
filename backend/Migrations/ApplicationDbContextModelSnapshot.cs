@@ -74,6 +74,78 @@ namespace backend.Migrations
                     b.ToTable("MonthlyRevenues");
                 });
 
+            modelBuilder.Entity("backend.Entities.Payment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
+
+                    b.Property<DateTimeOffset>("PayDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("PayMethod")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Payments");
+                });
+
+            modelBuilder.Entity("backend.Entities.Royalty", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(12,2)");
+
+                    b.Property<string>("CancelReason")
+                        .HasColumnType("text");
+
+                    b.Property<DateTimeOffset?>("CancelledAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("DueDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("PayDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("PaymentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("Percentage")
+                        .HasColumnType("numeric");
+
+                    b.Property<int>("ReferenceMonth")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ReferenceYear")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<Guid>("UnitId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PaymentId");
+
+                    b.HasIndex("UnitId", "ReferenceYear", "ReferenceMonth")
+                        .IsUnique();
+
+                    b.ToTable("Royalties");
+                });
+
             modelBuilder.Entity("backend.Entities.Unit", b =>
                 {
                     b.Property<Guid>("Id")
@@ -187,6 +259,23 @@ namespace backend.Migrations
                     b.Navigation("Unit");
                 });
 
+            modelBuilder.Entity("backend.Entities.Royalty", b =>
+                {
+                    b.HasOne("backend.Entities.Payment", "Payment")
+                        .WithMany()
+                        .HasForeignKey("PaymentId");
+
+                    b.HasOne("backend.Entities.Unit", "Unit")
+                        .WithMany("Royalties")
+                        .HasForeignKey("UnitId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Payment");
+
+                    b.Navigation("Unit");
+                });
+
             modelBuilder.Entity("backend.Entities.Unit", b =>
                 {
                     b.HasOne("backend.Entities.MainOffice", "MainOffice")
@@ -216,6 +305,8 @@ namespace backend.Migrations
             modelBuilder.Entity("backend.Entities.Unit", b =>
                 {
                     b.Navigation("MonthlyRevenues");
+
+                    b.Navigation("Royalties");
                 });
 #pragma warning restore 612, 618
         }
