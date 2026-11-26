@@ -1,6 +1,6 @@
 # FMS - Franchise Management System
 
-Sistema web para gerenciamento de franquias, com autenticação própria e controle de unidades por franqueadora. Já está em produção na primeira versão (CRUD de unidades + autenticação) e evolui para um sistema completo de gestão.
+Sistema web para gerenciamento de franquias, com autenticação própria, controle de unidades e de royalties por franqueadora. Já está em produção e evolui para um sistema completo de gestão.
 
 ##  Acesso à demo
 
@@ -21,14 +21,16 @@ Para testar sem precisar criar conta, use as credenciais abaixo:
 <p align="center">
   <img src="images/tela_login.png" alt="Tela Login" width="100%" style="max-width: 100%; min-width: 300px; margin: 10px;" />
   <img src="images/tela_inicial.png" alt="Tela Inicial" width="100%" style="max-width: 100%; min-width: 300px; margin: 10px;" />
+  <img src="images/tela_royalties.png" alt="Tela Royalties" width="100%" style="max-width: 100%; min-width: 300px; margin: 10px;" />
 </p>
 
 ## Funcionalidades atuais
 
 - CRUD de unidades
+- Royalties: geração mensal em massa, registro de pagamento (forma e data), cancelamento com motivo e filtro por status
 - Autenticação com JWT e rotas protegidas
 - Controle de acesso por role (atualmente: dono da franquia)
-- Isolamento de dados: cada usuário acessa apenas as unidades da própria sede
+- Isolamento de dados: cada usuário acessa apenas os dados da própria sede
 - Máscara e validação de CEP
 
 ## Stack
@@ -60,6 +62,9 @@ Em vez de usar uma solução pronta (como o Supabase), implementei o fluxo à m�
 ### shadcn/ui em vez de componentes feitos à mão
 Escolhi uma biblioteca de UI para ter um design profissional e consistente. O shadcn foi a escolha por ser bastante completo e adotado no mercado, e por injetar o código dos componentes no projeto, o que permite configurá-los livremente. Outro motivo importante foi a acessibilidade: os primitivos por baixo (no projeto, Base UI) já tratam navegação por teclado, leitores de tela e outros casos de borda que seriam trabalhosos de implementar manualmente.
 
+### Royalties: cobrança e pagamento separados
+O royalty representa a cobrança (valor, vencimento, status) e o pagamento é uma entidade própria, registrada na hora da baixa. Royalties nunca são excluídos, só cancelados com motivo, porque são dados financeiros e precisam deixar histórico. A taxa é gravada no momento da geração, então mudar a taxa da unidade não altera cobranças já emitidas.
+
 ### CORS (ainda não implementado)
 Como a comunicação é servidor com servidor, não foi necessário até agora. Será implementado quando o backend passar a receber requisições de outras origens além do próprio site.
 
@@ -75,11 +80,11 @@ O backend está organizado por tipo de arquivo (controllers, serviços etc.), o 
 
 ## Roadmap
 
-- [ ] Gerenciamento de royalties
+- [x] Gerenciamento de royalties (geração, pagamento, cancelamento)
 - [ ] Dashboard geral
 - [ ] Relatórios e exportação de dados
 - [ ] Acesso para gerentes/franqueados visualizarem seus próprios dados
 - [ ] Novas roles além de dono da franquia
 - [ ] Arquitetura em camadas ou por feature no backend
 - [ ] CORS, caso o backend seja consumido por outras origens
-- [ ] Auditoria (se viável)
+- [ ] Auditoria por categoria (royalties, unidades, permissões), configurável por rede
