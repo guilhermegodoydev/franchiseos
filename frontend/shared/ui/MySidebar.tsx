@@ -1,7 +1,7 @@
 "use client";
 
-import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarProvider } from "@/components/ui/sidebar";
-import { Building2, LogOut } from "lucide-react";
+import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarProvider } from "@/components/ui/sidebar";
+import { Building2, HandCoins, LogOut } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Field, FieldGroup, FieldError } from "@/components/ui/field";
@@ -60,12 +60,22 @@ export function MySidebar() {
           <SidebarGroupLabel>Geral</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              <Link href="/units" passHref>
-                <SidebarMenuButton isActive={pathname === "/units"}>
-                  <Building2 />
-                  <p>Unidades</p>
-                </SidebarMenuButton>
-              </Link>
+              <SidebarMenuItem>
+                <Link href="/units" passHref>
+                  <SidebarMenuButton isActive={pathname === "/units"}>
+                    <Building2 />
+                    <p>Unidades</p>
+                  </SidebarMenuButton>
+                </Link>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <Link href="/royalties" passHref>
+                  <SidebarMenuButton isActive={pathname === "/royalties"}>
+                    <HandCoins />
+                    <p>Royaties</p>
+                  </SidebarMenuButton>
+                </Link>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
 
