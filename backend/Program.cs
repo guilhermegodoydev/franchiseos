@@ -43,8 +43,11 @@ builder.Services.AddProblemDetails();
 builder.Services.AddScoped<MainOfficeService>();
 builder.Services.AddScoped<UnitService>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<RoyaltyService>();
+builder.Services.AddScoped<PaymentService>();
 
-builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+builder.Services.AddControllers()
+    .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 builder.Services.AddOpenApi();
 
 var app = builder.Build();

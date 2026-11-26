@@ -85,10 +85,15 @@ export default async function UnitsPage({ searchParams }: UnitPageProps) {
 
             <section className="mt-10">
                 <ContainerFilters states={dataStates} cities={dataCities}/>
-                <p className="text-muted-foreground font-semibold">{dataUnis?.totalItems} unidades encontrados</p>
+
                 <ContainerTable data={dataUnis?.items ?? []}/>
 
-                <DataPagination totalPages={dataUnis?.totalPages ?? 1} currentPage={currentPage} />
+                <DataPagination 
+                    registerName="unidades"
+                    totalItems={dataUnis?.totalItems ?? 0}
+                    totalPages={dataUnis?.totalPages ?? 1} 
+                    currentPage={currentPage} 
+                />
             </section>
         </>
     );

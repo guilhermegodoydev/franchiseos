@@ -20,7 +20,8 @@ public class GlobalExceptionHandler : IExceptionHandler {
             InvalidOperationDomainException => (StatusCodes.Status409Conflict, "Ação não permitida"),
             NoAccessException => (StatusCodes.Status403Forbidden, "Acesso negado"),
             UnauthorizedException => (StatusCodes.Status401Unauthorized, "Não autorizado"),
-            _ => (StatusCodes.Status500InternalServerError, "Erro Interno no Servidor")
+            _ => (StatusCodes.Status500InternalServerError, exception.Message)
+            //_ => (StatusCodes.Status500InternalServerError, "Erro Interno no Servidor")
         };
 
         httpContext.Response.StatusCode = statusCode;

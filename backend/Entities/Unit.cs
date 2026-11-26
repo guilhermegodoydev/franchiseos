@@ -18,6 +18,8 @@ public class Unit {
     public Guid MainOfficeId { get; private set; }
     public MainOffice MainOffice { get; private set; } = null!;
 
+    public ICollection<Royalty> Royalties { get; private set; } = new List<Royalty>();
+
     public ICollection<MonthlyRevenue> MonthlyRevenues { get; private set; } = new List<MonthlyRevenue>();
 
     public bool IsActive => Status == StatusEnum.Active;

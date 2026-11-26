@@ -13,6 +13,9 @@ public class ApplicationDbContext: DbContext {
     public DbSet<MonthlyRevenue> MonthlyRevenues { get; set; }
     public DbSet<User> Users { get; set; }
 
+    public DbSet<Royalty> Royalties { get; set; }
+    public DbSet<Payment> Payments => Set<Payment>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -60,6 +63,27 @@ public class ApplicationDbContext: DbContext {
             entity.Property(u => u.PasswordHash).IsRequired();
             entity.Property(u => u.Role).IsRequired().HasConversion<string>().HasMaxLength(20);
             entity.HasOne(u => u.MainOffice).WithMany().HasForeignKey(u => u.MainOfficeId).OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<Royalty>(entity => {
+            entity.HasKey(r => r.Id);
+
+            entity.Property(r => r.Amount).IsRequired().HasColumnType("decimal(12,2)");
+            entity.Property(r => r.Percentage).IsRequired();
+            entity.Property(r => r.ReferenceMonth).IsRequired();
+            entity.Property(r => r.ReferenceYear).IsRequired();
+            entity.Property(r => r.DueDate).IsRequired();
+            entity.Property(r => r.Status).IsRequired().HasConversion<string>().HasMaxLength(20);
+
+            entity.HasIndex(r => new { r.UnitId, r.ReferenceYear, r.ReferenceMonth }).IsUnique();
+
+            entity.HasOne(r => r.Unit).WithMany(u => u.Royalties).HasForeignKey(r => r.UnitId).OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<Payment>(e =>
+        {
+            e.HasKey(p => p.Id);
+            e.Property(p => p.Amount).HasPrecision(18, 2);
         });
     }
 }

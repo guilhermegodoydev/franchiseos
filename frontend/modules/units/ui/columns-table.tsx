@@ -2,20 +2,15 @@
 
 import { DataTableFeatures } from "@/shared/ui/table/Datatablefeatures";
 import { createColumnHelper } from "@tanstack/react-table";
-import { tableUnit, UNIT_SIZE_LABEL, UNIT_STATUS_LABEL, UNIT_TYPE_LABEL, UnitSize, UnitType } from "../schema";
+import { tableUnit, UNIT_SIZE_LABEL, UNIT_TYPE_LABEL, UnitSize, UnitType } from "../schema";
 import { formatCurrency } from "@/shared/utils";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { TableRowActions } from "../features/TableRowActions";
-import { ReactNode } from "react";
+import { UnitStatusBadge } from "./UnitStatusBadge";
 
 const columnHelper = createColumnHelper<DataTableFeatures, tableUnit>();
-
-const styles = {
-    Active: "bg-green-500/15 text-green-500 border-green-500",
-    Inactive: "bg-gray-500/15 text-gray-500 border-gray-400",
-}
 
 export const columns = ( 
     onRequestDelete: (unitId: string, unitName: string) => void,
@@ -39,16 +34,7 @@ export const columns = (
 
     columnHelper.accessor("status", {
         header: "Status",
-        cell: ({ row }) => {
-            const value = row.original.status;
-            const formattedValue = UNIT_STATUS_LABEL[value].toUpperCase();
-            
-            return (
-                <Badge variant="outline" className={styles[value as keyof typeof styles]}>
-                    {formattedValue}
-                </Badge>
-            );
-        }
+        cell: ({ row }) => (<UnitStatusBadge status={row.original.status}/>)
     }),
 
     columnHelper.accessor("type", {

@@ -12,7 +12,7 @@ export function Header({ title, subtext, children }: HeaderProps) {
             <div className="flex items-center justify-between">
                 <div>
                 <h1 className="text-3xl font-bold">{title}</h1>
-                <p className="text-gray-500">{subtext}</p>
+                <p className="text-sm text-muted-foreground">{subtext}</p>
                 </div>
 
                 <div>
